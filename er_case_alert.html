@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ER New Case Alert Generator</title>
+<style>
+  :root{
+    --bg: #eef2f1;
+    --panel: #ffffff;
+    --ink: #16302c;
+    --ink-soft: #4d635f;
+    --line: #d7e1de;
+    --teal: #0f5c56;
+    --teal-deep: #0a3f3b;
+    --amber: #c76a1f;
+    --alert: #b3261e;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      linear-gradient(180deg, var(--teal-deep) 0px, var(--teal-deep) 6px, transparent 6px),
+      var(--bg);
+    font-family:var(--sans);
+    color:var(--ink);
+    padding:0 0 60px 0;
+  }
+  header{
+    padding:28px 24px 18px;
+    max-width:980px;
+    margin:0 auto;
+  }
+  @media (max-width:520px){
+    header{ padding:20px 16px 14px; }
+    main{ padding:0 12px; gap:16px; }
+    h1{ font-size:21px; }
+    .sub{ font-size:12.5px; }
+    body{ padding-bottom:84px; }
+  }
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--alert);
+    font-weight:700;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:8px;height:8px;border-radius:50%;
+    background:var(--alert);
+    box-shadow:0 0 0 4px rgba(179,38,30,0.15);
+  }
+  h1{
+    margin:6px 0 4px;
+    font-size:26px;
+    letter-spacing:-0.01em;
+    color:var(--teal-deep);
+  }
+  .sub{
+    color:var(--ink-soft);
+    font-size:13.5px;
+    max-width:640px;
+    line-height:1.5;
+  }
+  main{
+    max-width:980px;
+    margin:0 auto;
+    padding:0 24px;
+    display:grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap:22px;
+  }
+  @media (max-width: 860px){
+    main{grid-template-columns:1fr;}
+    .output-wrap{position:static; order:-1;}
+    #output{max-height:260px;}
+  }
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .section-title{
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--teal);
+    font-weight:700;
+    padding:14px 18px 8px;
+    border-top:1px solid var(--line);
+  }
+  .section-title:first-of-type{border-top:none;}
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 12px;
+    padding:4px 18px 16px;
+  }
+  .grid.single{grid-template-columns:1fr;}
+  .field{display:flex;flex-direction:column;gap:4px;}
+  .field.wide{grid-column:1 / -1;}
+  label{
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+  input, textarea, select{
+    font-family:var(--sans);
+    font-size:13.5px;
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:#fbfdfc;
+    color:var(--ink);
+    resize:vertical;
+    width:100%;
+  }
+  @media (max-width: 520px){
+    input, textarea, select{ font-size:16px; padding:10px; }
+  }
+  input:focus, textarea:focus, select:focus{
+    outline:2px solid var(--teal);
+    outline-offset:1px;
+    border-color:var(--teal);
+  }
+  textarea{min-height:56px; line-height:1.4;}
+  .vitals-grid{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:10px 12px;
+    padding:4px 18px 16px;
+  }
+  @media (max-width:520px){
+    .grid, .vitals-grid{grid-template-columns:1fr 1fr;}
+    .mrd-grid{grid-template-columns:1fr 1fr;}
+    .grid, .vitals-grid, .mrd-grid{ padding-left:14px; padding-right:14px; }
+    .section-title{ padding-left:14px; padding-right:14px; }
+  }
+  .mrd-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:10px 12px;
+    padding:4px 18px 18px;
+  }
+  .output-wrap{position:sticky; top:20px; align-self:start;}
+  .output-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+    background:var(--teal-deep);
+    color:#eaf3f1;
+  }
+  .output-head h2{
+    font-size:13px;
+    margin:0;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  .btn{
+    font-family:var(--sans);
+    font-size:12.5px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:6px;
+    border:none;
+    cursor:pointer;
+    transition:transform .12s ease, background .15s ease;
+  }
+  .btn-copy{
+    background:var(--amber);
+    color:#fff;
+  }
+  .btn-copy:hover{background:#a95a17;}
+  .btn-copy:active{transform:scale(0.97);}
+  .btn-copy.copied{background:var(--teal);}
+  #output{
+    white-space:pre-wrap;
+    font-family:var(--mono);
+    font-size:12.8px;
+    line-height:1.65;
+    padding:18px;
+    color:var(--ink);
+    max-height:640px;
+    overflow-y:auto;
+  }
+  .empty-field{color:#a8b6b3; font-style:italic;}
+  .hint{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    padding:10px 18px 0;
+  }
+  footer{
+    max-width:980px;
+    margin:26px auto 0;
+    padding:0 24px;
+    font-size:11.5px;
+    color:var(--ink-soft);
+  }
+  .float-copy{
+    display:none;
+  }
+  @media (max-width:860px){
+    .float-copy{
+      display:block;
+      position:fixed;
+      left:0; right:0; bottom:0;
+      padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+      background:var(--panel);
+      border-top:1px solid var(--line);
+      box-shadow:0 -4px 14px rgba(10,63,59,0.08);
+      z-index:50;
+    }
+    .float-copy .btn-copy{
+      width:100%;
+      padding:13px 14px;
+      font-size:14px;
+      border-radius:8px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">New Case Alert</div>
+  <h1>ER Case Alert Generator</h1>
+  <div class="sub">Fill in the fields as the case comes in. The formatted message on the right updates live — copy it and send straight to the senior doctor.</div>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="section-title">Case identification</div>
+    <div class="grid">
+      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" placeholder="e.g. 214"></div>
+      <div class="field"><label for="fr">First Respondent (FR)</label><input id="fr" placeholder="Name"></div>
+      <div class="field"><label for="recvTime">Receiving time</label><input id="recvTime" type="time"></div>
+      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" placeholder="e.g. ER-4"></div>
+    </div>
+
+    <div class="section-title">Patient details</div>
+    <div class="grid">
+      <div class="field wide"><label for="pname">Patient name</label><input id="pname" placeholder="Full name"></div>
+      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" placeholder="e.g. 45 / M"></div>
+      <div class="field"><label for="occ">Occupation</label><input id="occ" placeholder="e.g. Farmer"></div>
+    </div>
+
+    <div class="section-title">Presenting complaints &amp; history</div>
+    <div class="grid single">
+      <div class="field"><label for="complaints">Presenting complaints (one per line)</label><textarea id="complaints" placeholder="e.g.&#10;Pain abdomen x 2 days&#10;Vomiting x 3 episodes"></textarea></div>
+      <div class="field"><label for="history">Brief history leading to presenting complaints</label><textarea id="history" placeholder="Onset, progression, associated factors, cause of current illness"></textarea></div>
+    </div>
+
+    <div class="section-title">Vitals</div>
+    <div class="vitals-grid">
+      <div class="field"><label for="bp">BP</label><input id="bp" placeholder="mmHg"></div>
+      <div class="field"><label for="pr">PR</label><input id="pr" placeholder="/min"></div>
+      <div class="field"><label for="spo2">SpO2</label><input id="spo2" placeholder="%"></div>
+      <div class="field"><label for="rr">RR</label><input id="rr" placeholder="/min"></div>
+      <div class="field"><label for="temp">Temp</label><input id="temp" placeholder="°F"></div>
+      <div class="field"><label for="grbs">GRBS</label><input id="grbs" placeholder="mg/dl"></div>
+      <div class="field"><label for="gcs">GCS</label><input id="gcs" placeholder="e.g. 15/15"></div>
+    </div>
+
+    <div class="section-title">Past history</div>
+    <div class="grid single">
+      <div class="field"><label for="pastHx">Systemic diseases / regular medication / known allergies</label><textarea id="pastHx" placeholder="e.g. K/c/o DM2, HTN on regular meds. No known drug allergies."></textarea></div>
+    </div>
+
+    <div class="section-title">Triage &amp; consultation</div>
+    <div class="grid">
+      <div class="field wide"><label for="triage">Triage category (priority &amp; zone)</label><input id="triage" placeholder="e.g. Priority I / Red zone"></div>
+      <div class="field"><label for="consultDept">Consultation call — department / doctor (DMO/DSO/JR)</label><input id="consultDept" placeholder="e.g. Surgery — Dr. X (JR)"></div>
+      <div class="field"><label for="consultTime">Consultation call — time</label><input id="consultTime" type="time"></div>
+    </div>
+
+    <div class="section-title">Workup &amp; treatment</div>
+    <div class="grid single">
+      <div class="field"><label for="invx">Investigations advised</label><textarea id="invx" placeholder="e.g. CBP, RFT, LFT, USG abdomen"></textarea></div>
+      <div class="field"><label for="tx">Treatment initiated in ER</label><textarea id="tx" placeholder="e.g. IVF NS started, Inj. Pantop IV stat"></textarea></div>
+      <div class="field"><label for="diagnosis">Provisional / final diagnosis</label><textarea id="diagnosis" placeholder="e.g. ? Acute appendicitis"></textarea></div>
+    </div>
+
+    <div class="section-title">MRD &amp; date</div>
+    <div class="mrd-grid">
+      <div class="field"><label for="mrdOp">MRD — OP No.</label><input id="mrdOp" placeholder="OP number"></div>
+      <div class="field"><label for="mrdIp">MRD — IP No.</label><input id="mrdIp" placeholder="IP number"></div>
+      <div class="field"><label for="caseDate">Date</label><input id="caseDate" type="date"></div>
+    </div>
+  </div>
+
+  <div class="panel output-wrap">
+    <div class="output-head">
+      <h2>Formatted message</h2>
+      <button class="btn btn-copy" id="copyBtn">Copy message</button>
+    </div>
+    <div class="hint">Blank fields are left as dashes so the layout matches the original template.</div>
+    <div id="output"></div>
+  </div>
+</main>
+
+<footer>Built for quick handover to the senior doctor — fill left, copy right.</footer>
+
+<div class="float-copy">
+  <button class="btn btn-copy" id="copyBtnMobile">Copy message</button>
+</div>
+
+<script>
+function v(id){
+  const el = document.getElementById(id);
+  return el.value.trim();
+}
+function line(val){
+  return val ? val : "";
+}
+function buildMessage(){
+  const complaintsRaw = v('complaints');
+  let complaintsBlock = "1).";
+  if(complaintsRaw){
+    const items = complaintsRaw.split('\n').map(s=>s.trim()).filter(Boolean);
+    complaintsBlock = items.map((c,i)=>`${i+1}). ${c}`).join('\n');
+  }
+
+  let complaintsBold = "*1).*";
+  if(complaintsRaw){
+    const items = complaintsRaw.split('\n').map(s=>s.trim()).filter(Boolean);
+    complaintsBold = items.map((c,i)=>`*${i+1}).*\n${c}`).join('\n');
+  }
+
+  const consultLine = `${line(v('consultDept'))}${v('consultTime') ? ' at ' + v('consultTime') : ''}`;
+
+  const msg = `*NEW CASE ALERT*\n\n*ER SL.No*- ${line(v('erSl'))}\n*First Respondant (FR)*- ${line(v('fr'))}\n*Receiving TIME*- ${line(v('recvTime'))}\n*BED No*- ${line(v('bedNo'))}\n*PATIENT NAME*- ${line(v('pname'))}\n*AGE & GENDER*- ${line(v('ageGender'))}\n*OCCUPATION*- ${line(v('occ'))}\n\n*PRESENTING COMPLAINTS*\n${complaintsBold}\n\n*BRIEF HISTORY Leading to the Mentioned Presenting Complaints (Cause of Current illness / Condition)*-\n${line(v('history'))}\n\n*VITALS*:\n*BP*- ${line(v('bp'))}\n*PR*- ${line(v('pr'))}\n*SpO2*- ${line(v('spo2'))}\n*RR*- ${line(v('rr'))}\n*TEMP*- ${line(v('temp'))}\n*GRBS*- ${line(v('grbs'))}\n*GCS*- ${line(v('gcs'))}\n\n*PAST HISTORY ( Any Systemic Diseases and Regular Medication Details / Any Known Allergies to Medicines)*:\n${line(v('pastHx'))}\n\n*TRIAGE CATEGORY ( Priority & Zone )*:\n${line(v('triage'))}\n\n*CONSULTATION CALL Given to DEPARTMENT ( Name of DMO / DSO & JR ) at TIME*:\n${consultLine}\n\n*INVESTIGATIONS Advised*:\n${line(v('invx'))}\n\n*TREATMENT Initiated in ER*:\n${line(v('tx'))}\n\n*PROVISIONAL / FINAL DIAGNOSIS*:\n${line(v('diagnosis'))}\n\n*MRD Numbers*:\n*OP*- ${line(v('mrdOp'))}\n*IP*- ${line(v('mrdIp'))}\n*DATE*- ${line(v('caseDate'))}`;
+  return msg;
+}
+
+function escapeHtml(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function renderPreviewHtml(text){
+  const escaped = escapeHtml(text);
+  return escaped.replace(/\*(.+?)\*/g, '<strong>$1</strong>');
+}
+function render(){
+  const text = buildMessage();
+  document.getElementById('output').innerHTML = renderPreviewHtml(text);
+}
+
+document.querySelectorAll('input, textarea').forEach(el=>{
+  el.addEventListener('input', render);
+});
+
+async function copyMessage(btn){
+  const text = buildMessage();
+  try{
+    await navigator.clipboard.writeText(text);
+  }catch(e){
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  }
+  const original = btn.textContent;
+  btn.textContent = "Copied ✓";
+  btn.classList.add('copied');
+  setTimeout(()=>{
+    btn.textContent = original;
+    btn.classList.remove('copied');
+  }, 1500);
+}
+
+document.getElementById('copyBtn').addEventListener('click', function(){ copyMessage(this); });
+document.getElementById('copyBtnMobile').addEventListener('click', function(){ copyMessage(this); });
+
+render();
+</script>
+
+</body>
+</html>
