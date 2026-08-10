@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>New Case Alert</title>
+<title>ER New Case Alert Generator</title>
 <style>
   :root{
     --bg: #eef2f1;
@@ -104,12 +104,13 @@
     padding:4px 18px 16px;
   }
   .grid.single{grid-template-columns:1fr;}
-  .field{display:flex;flex-direction:column;gap:4px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
   .field.wide{grid-column:1 / -1;}
   label{
     font-size:11.5px;
     font-weight:600;
     color:var(--ink-soft);
+    line-height:1.35;
   }
   input, textarea, select{
     font-family:var(--sans);
@@ -121,9 +122,15 @@
     color:var(--ink);
     resize:vertical;
     width:100%;
+    min-height:38px;
+    box-sizing:border-box;
+  }
+  input[type="time"], input[type="date"]{
+    min-height:38px;
+    line-height:1.3;
   }
   @media (max-width: 520px){
-    input, textarea, select{ font-size:16px; padding:10px; }
+    input, textarea, select{ font-size:16px; padding:10px; min-height:44px; }
   }
   input:focus, textarea:focus, select:focus{
     outline:2px solid var(--teal);
@@ -248,8 +255,8 @@
 <body>
 
 <header>
-  <div class="eyebrow">New Case Alert</div>
-  <h1>ER Case Alert Generator</h1>
+  <div class="eyebrow"></div>
+  <h1>New Case Alert</h1>
   <a href="#formStart" class="jump-link">↓ Start filling case details</a>
 </header>
 
