@@ -6,250 +6,446 @@
 <title>ER New Case Alert Generator</title>
 <style>
   :root{
-    --bg: #eef2f1;
-    --panel: #ffffff;
-    --ink: #16302c;
-    --ink-soft: #4d635f;
-    --line: #d7e1de;
-    --teal: #0f5c56;
-    --teal-deep: #0a3f3b;
-    --amber: #c76a1f;
-    --alert: #b3261e;
-    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    --bg:#f4f7f6;
+    --panel:#ffffff;
+    --ink:#17322e;
+    --ink-soft:#647672;
+    --line:#dbe5e2;
+    --teal:#0f6b63;
+    --teal-deep:#083f3a;
+    --teal-soft:#e8f4f1;
+    --amber:#c86b20;
+    --alert:#b3261e;
+    --shadow:0 8px 28px rgba(8,63,58,.08);
+    --radius:14px;
+    --sans:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
   }
-  *{box-sizing:border-box;}
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
   body{
     margin:0;
+    min-height:100vh;
     background:
-      linear-gradient(180deg, var(--teal-deep) 0px, var(--teal-deep) 6px, transparent 6px),
+      linear-gradient(180deg,var(--teal-deep) 0 4px,transparent 4px),
       var(--bg);
-    font-family:var(--sans);
     color:var(--ink);
-    padding:0 0 60px 0;
+    font-family:var(--sans);
+    padding:0 0 88px;
   }
+
   header{
-    padding:28px 24px 18px;
-    max-width:980px;
+    max-width:1080px;
     margin:0 auto;
+    padding:26px 24px 18px;
   }
-  @media (max-width:520px){
-    header{ padding:20px 16px 14px; }
-    main{ padding:0 12px; gap:16px; }
-    h1{ font-size:21px; }
-    .sub{ font-size:12.5px; }
-    body{ padding-bottom:84px; }
-  }
+
   .eyebrow{
-    font-size:12px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--alert);
-    font-weight:700;
     display:flex;
     align-items:center;
     gap:8px;
+    color:var(--alert);
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:.14em;
+    text-transform:uppercase;
   }
   .eyebrow::before{
     content:"";
     width:8px;height:8px;border-radius:50%;
     background:var(--alert);
-    box-shadow:0 0 0 4px rgba(179,38,30,0.15);
+    box-shadow:0 0 0 4px rgba(179,38,30,.12);
   }
+
   h1{
-    margin:6px 0 4px;
-    font-size:26px;
-    letter-spacing:-0.01em;
+    margin:7px 0 5px;
     color:var(--teal-deep);
+    font-size:30px;
+    line-height:1.1;
+    letter-spacing:-.025em;
   }
   .sub{
+    margin:0;
+    max-width:720px;
     color:var(--ink-soft);
-    font-size:13.5px;
-    max-width:640px;
+    font-size:13px;
     line-height:1.5;
   }
+
   main{
-    max-width:980px;
+    max-width:1080px;
     margin:0 auto;
     padding:0 24px;
     display:grid;
-    grid-template-columns: 1.15fr 1fr;
+    grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
     gap:22px;
+    align-items:start;
   }
-  @media (max-width: 860px){
-    main{grid-template-columns:1fr;}
-    .output-wrap{position:static;}
-    #output{max-height:320px;}
-  }
+
   .panel{
+    min-width:0;
+    overflow:hidden;
     background:var(--panel);
     border:1px solid var(--line);
-    border-radius:10px;
-    overflow:hidden;
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
   }
+
+  #formStart{
+    scroll-margin-top:16px;
+  }
+
   .section-title{
-    font-size:11px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    margin:0;
+    padding:15px 18px 9px;
+    border-top:1px solid var(--line);
+    color:var(--teal);
+    font-size:10.5px;
+    font-weight:800;
     letter-spacing:.12em;
     text-transform:uppercase;
-    color:var(--teal);
-    font-weight:700;
-    padding:14px 18px 8px;
-    border-top:1px solid var(--line);
   }
-  .section-title:first-of-type{border-top:none;}
-  .grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px 12px;
-    padding:4px 18px 16px;
+  .section-title:first-child{border-top:0}
+  .section-title::before{
+    content:"";
+    width:4px;
+    height:15px;
+    border-radius:99px;
+    background:var(--teal);
   }
-  .grid.single{grid-template-columns:1fr;}
-  .field{display:flex;flex-direction:column;gap:6px;}
-  .field.wide{grid-column:1 / -1;}
-  label{
-    font-size:11.5px;
-    font-weight:600;
-    color:var(--ink-soft);
-    line-height:1.35;
-  }
-  input, textarea, select{
-    font-family:var(--sans);
-    font-size:13.5px;
-    padding:8px 10px;
-    border:1px solid var(--line);
-    border-radius:6px;
-    background:#fbfdfc;
-    color:var(--ink);
-    resize:vertical;
-    width:100%;
-    min-height:38px;
-    box-sizing:border-box;
-  }
-  input[type="time"], input[type="date"]{
-    min-height:38px;
-    line-height:1.3;
-  }
-  @media (max-width: 520px){
-    input, textarea, select{ font-size:16px; padding:10px; min-height:44px; }
-  }
-  input:focus, textarea:focus, select:focus{
-    outline:2px solid var(--teal);
-    outline-offset:1px;
-    border-color:var(--teal);
-  }
-  textarea{min-height:56px; line-height:1.4;}
-  .vitals-grid{
-    display:grid;
-    grid-template-columns:repeat(4, 1fr);
-    gap:10px 12px;
-    padding:4px 18px 16px;
-  }
-  @media (max-width:520px){
-    .grid, .vitals-grid{grid-template-columns:1fr 1fr;}
-    .mrd-grid{grid-template-columns:1fr 1fr;}
-    .grid, .vitals-grid, .mrd-grid{ padding-left:14px; padding-right:14px; }
-    .section-title{ padding-left:14px; padding-right:14px; }
-  }
+
+  .grid,
+  .vitals-grid,
   .mrd-grid{
     display:grid;
-    grid-template-columns:1fr 1fr 1fr;
-    gap:10px 12px;
-    padding:4px 18px 18px;
+    gap:11px 12px;
+    padding:4px 18px 17px;
   }
-  .output-wrap{position:sticky; top:20px; align-self:start;}
+  .grid{grid-template-columns:1fr 1fr}
+  .grid.single{grid-template-columns:1fr}
+  .vitals-grid{grid-template-columns:repeat(4,1fr)}
+  .mrd-grid{grid-template-columns:repeat(3,1fr)}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .field.wide{grid-column:1/-1}
+
+  label{
+    color:var(--ink-soft);
+    font-size:11px;
+    font-weight:700;
+    line-height:1.35;
+  }
+
+  input,textarea,select{
+    width:100%;
+    min-height:40px;
+    padding:9px 11px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    outline:none;
+    background:#fbfdfc;
+    color:var(--ink);
+    font:500 13px/1.35 var(--sans);
+    transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
+  }
+  input:hover,textarea:hover,select:hover{border-color:#b9cfca}
+  input:focus,textarea:focus,select:focus{
+    border-color:var(--teal);
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(15,107,99,.12);
+  }
+  input[type="time"],input[type="date"]{
+    min-height:40px;
+  }
+  textarea{
+    min-height:72px;
+    line-height:1.45;
+    resize:vertical;
+  }
+  ::placeholder{color:#a3b1ae}
+
+  .output-wrap{
+    position:sticky;
+    top:16px;
+    align-self:start;
+  }
   .output-head{
     display:flex;
-    justify-content:space-between;
     align-items:center;
-    padding:14px 18px;
-    border-bottom:1px solid var(--line);
+    justify-content:space-between;
+    gap:12px;
+    padding:13px 14px 13px 18px;
     background:var(--teal-deep);
-    color:#eaf3f1;
+    color:#eef8f6;
   }
   .output-head h2{
-    font-size:13px;
     margin:0;
-    letter-spacing:.06em;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.08em;
     text-transform:uppercase;
-    font-weight:700;
   }
+
   .btn{
-    font-family:var(--sans);
-    font-size:12.5px;
-    font-weight:600;
-    padding:8px 14px;
-    border-radius:6px;
-    border:none;
+    border:0;
+    border-radius:9px;
     cursor:pointer;
-    transition:transform .12s ease, background .15s ease;
+    font:700 12px var(--sans);
+    transition:transform .12s ease,filter .15s ease;
+    -webkit-tap-highlight-color:transparent;
   }
+  .btn:active{transform:scale(.98)}
   .btn-copy{
+    padding:9px 13px;
     background:var(--amber);
     color:#fff;
+    white-space:nowrap;
   }
-  .btn-copy:hover{background:#a95a17;}
-  .btn-copy:active{transform:scale(0.97);}
-  .btn-copy.copied{background:var(--teal);}
-  #output{
-    white-space:pre-wrap;
-    font-family:var(--mono);
-    font-size:12.8px;
-    line-height:1.65;
-    padding:18px;
-    color:var(--ink);
-    max-height:640px;
-    overflow-y:auto;
-  }
-  .empty-field{color:#a8b6b3; font-style:italic;}
+  .btn-copy:hover{filter:brightness(.93)}
+  .btn-copy.copied{background:var(--teal)}
+
   .hint{
-    font-size:11.5px;
-    color:var(--ink-soft);
     padding:10px 18px 0;
-  }
-  footer{
-    max-width:980px;
-    margin:26px auto 0;
-    padding:0 24px;
-    font-size:11.5px;
     color:var(--ink-soft);
+    font-size:10.5px;
+    line-height:1.45;
   }
+  #output{
+    max-height:calc(100vh - 145px);
+    overflow:auto;
+    padding:16px 18px 20px;
+    white-space:pre-wrap;
+    color:var(--ink);
+    font:500 12px/1.7 var(--mono);
+    -webkit-overflow-scrolling:touch;
+  }
+  #output strong{font-weight:800;color:var(--teal-deep)}
+
   .jump-link{
     display:none;
+    margin-top:13px;
+    padding:10px 13px;
+    border-radius:9px;
+    background:var(--teal);
+    color:#fff;
+    font-size:12px;
+    font-weight:800;
+    text-decoration:none;
+    text-align:center;
   }
+
   .float-copy{
     display:none;
   }
-  @media (max-width:860px){
-    .jump-link{
-      display:inline-block;
-      margin-top:12px;
-      font-size:13px;
-      font-weight:600;
-      color:#fff;
-      background:var(--teal);
-      padding:9px 14px;
-      border-radius:7px;
-      text-decoration:none;
-    }
+
+  footer{
+    max-width:1080px;
+    margin:24px auto 0;
+    padding:0 24px;
+    color:var(--ink-soft);
+    font-size:10.5px;
   }
-  @media (max-width:860px){
+
+  /* Tablet */
+  @media (max-width:900px){
+    header{padding:22px 18px 15px}
+    main{
+      grid-template-columns:1fr;
+      padding:0 18px;
+      gap:16px;
+    }
+    .output-wrap{
+      position:static;
+      order:2;
+    }
+    #output{max-height:420px}
+    .jump-link{display:inline-block}
+  }
+
+  /* Phone */
+  @media (max-width:600px){
+    body{
+      padding-bottom:82px;
+      background:
+        linear-gradient(180deg,var(--teal-deep) 0 3px,transparent 3px),
+        var(--bg);
+    }
+
+    header{
+      padding:18px 14px 12px;
+    }
+    .eyebrow{font-size:10px}
+    h1{font-size:24px;margin-top:6px}
+    .sub{font-size:12px;line-height:1.45}
+
+    main{
+      padding:0 10px;
+      gap:12px;
+    }
+
+    .panel{border-radius:12px}
+    .section-title{
+      padding:14px 13px 8px;
+      font-size:10px;
+    }
+    .section-title::before{height:13px}
+
+    .grid,.vitals-grid,.mrd-grid{
+      padding-left:13px;
+      padding-right:13px;
+      gap:10px;
+    }
+
+    .grid{grid-template-columns:1fr 1fr}
+    .vitals-grid{grid-template-columns:1fr 1fr}
+    .mrd-grid{grid-template-columns:1fr 1fr}
+
+    .field.wide{grid-column:1/-1}
+    label{font-size:10.5px}
+
+    input,textarea,select{
+      min-height:46px;
+      padding:10px 11px;
+      border-radius:9px;
+      font-size:16px; /* prevents iOS zoom */
+    }
+    textarea{min-height:92px}
+    input[type="time"],input[type="date"]{min-height:46px}
+
+    .output-head{
+      padding:12px 12px 12px 14px;
+    }
+    .output-head h2{font-size:10.5px}
+    .output-head .btn-copy{display:none}
+    .hint{
+      padding:9px 14px 0;
+      font-size:10px;
+    }
+    #output{
+      max-height:360px;
+      padding:14px;
+      font-size:11.5px;
+      line-height:1.65;
+    }
+
     .float-copy{
       display:block;
       position:fixed;
-      left:0; right:0; bottom:0;
-      padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-      background:var(--panel);
+      left:0;right:0;bottom:0;
+      z-index:100;
+      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+      background:rgba(255,255,255,.96);
       border-top:1px solid var(--line);
-      box-shadow:0 -4px 14px rgba(10,63,59,0.08);
-      z-index:50;
+      box-shadow:0 -5px 20px rgba(8,63,58,.10);
+      backdrop-filter:blur(10px);
     }
     .float-copy .btn-copy{
+      display:block;
       width:100%;
-      padding:13px 14px;
+      min-height:48px;
+      padding:12px 14px;
+      border-radius:10px;
       font-size:14px;
-      border-radius:8px;
+    }
+
+    footer{
+      padding:0 14px;
+      margin-top:18px;
     }
   }
+
+  @media (max-width:380px){
+    .grid{grid-template-columns:1fr}
+    .vitals-grid,.mrd-grid{grid-template-columns:1fr 1fr}
+    .field.wide{grid-column:auto}
+    h1{font-size:22px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{scroll-behavior:auto!important;transition:none!important}
+  }
+
+
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:var(--teal-soft);
+  }
+  .toggle-label{
+    display:block;
+    color:var(--ink);
+    font-size:11px;
+    font-weight:800;
+    line-height:1.35;
+    cursor:pointer;
+  }
+  .toggle-help{
+    margin-top:3px;
+    color:var(--ink-soft);
+    font-size:10px;
+    line-height:1.35;
+  }
+  .switch{
+    position:relative;
+    flex:0 0 auto;
+    width:46px;
+    height:26px;
+    margin:0;
+    cursor:pointer;
+  }
+  .switch input{
+    position:absolute;
+    opacity:0;
+    width:0;
+    height:0;
+    min-height:0;
+  }
+  .slider{
+    position:absolute;
+    inset:0;
+    border-radius:99px;
+    background:#b9c8c5;
+    transition:.2s ease;
+  }
+  .slider::before{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:20px;
+    left:3px;
+    top:3px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 1px 3px rgba(0,0,0,.2);
+    transition:.2s ease;
+  }
+  .switch input:checked + .slider{
+    background:var(--teal);
+  }
+  .switch input:checked + .slider::before{
+    transform:translateX(20px);
+  }
+  .switch input:focus-visible + .slider{
+    box-shadow:0 0 0 3px rgba(15,107,99,.16);
+  }
+
+  .btn-reset{
+    padding:9px 11px;
+    background:rgba(255,255,255,.12);
+    color:#eaf3f1;
+    border:1px solid rgba(255,255,255,.18);
+  }
+  .btn-reset:hover{background:rgba(255,255,255,.18)}
+  @media (max-width:600px){.btn-reset{display:none}}
+
 </style>
 </head>
 <body>
@@ -264,16 +460,16 @@
   <div class="panel" id="formStart">
     <div class="section-title">Case identification</div>
     <div class="grid">
-      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" placeholder="e.g. 214"></div>
+      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" placeholder="e.g. 214"></div>
       <div class="field"><label for="fr">First Respondent (FR)</label><input id="fr" placeholder="Name"></div>
       <div class="field"><label for="recvTime">Receiving time</label><input id="recvTime" type="time"></div>
-      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" placeholder="e.g. ER-4"></div>
+      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" placeholder="e.g. ER-4"></div>
     </div>
 
     <div class="section-title">Patient details</div>
     <div class="grid">
-      <div class="field wide"><label for="pname">Patient name</label><input id="pname" placeholder="Full name"></div>
-      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" placeholder="e.g. 45 / M"></div>
+      <div class="field wide"><label for="pname">Patient name</label><input id="pname" autocomplete="name" placeholder="Full name"></div>
+      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" inputmode="text" placeholder="e.g. 45 / M"></div>
       <div class="field"><label for="occ">Occupation</label><input id="occ" placeholder="e.g. Farmer"></div>
     </div>
 
@@ -285,18 +481,33 @@
 
     <div class="section-title">Vitals</div>
     <div class="vitals-grid">
-      <div class="field"><label for="bp">BP</label><input id="bp" placeholder="mmHg"></div>
-      <div class="field"><label for="pr">PR</label><input id="pr" placeholder="/min"></div>
-      <div class="field"><label for="spo2">SpO2</label><input id="spo2" placeholder="%"></div>
-      <div class="field"><label for="rr">RR</label><input id="rr" placeholder="/min"></div>
-      <div class="field"><label for="temp">Temp</label><input id="temp" placeholder="°F"></div>
-      <div class="field"><label for="grbs">GRBS</label><input id="grbs" placeholder="mg/dl"></div>
+      <div class="field"><label for="bp">BP</label><input id="bp" inputmode="decimal" placeholder="mmHg"></div>
+      <div class="field"><label for="pr">PR</label><input id="pr" inputmode="numeric" placeholder="/min"></div>
+      <div class="field"><label for="spo2">SpO2</label><input id="spo2" inputmode="decimal" placeholder="%"></div>
+      <div class="field"><label for="rr">RR</label><input id="rr" inputmode="numeric" placeholder="/min"></div>
+      <div class="field"><label for="temp">Temp</label><input id="temp" inputmode="decimal" placeholder="°F"></div>
+      <div class="field"><label for="grbs">GRBS</label><input id="grbs" inputmode="decimal" placeholder="mg/dl"></div>
       <div class="field"><label for="gcs">GCS</label><input id="gcs" placeholder="e.g. 15/15"></div>
     </div>
 
     <div class="section-title">Past history</div>
     <div class="grid single">
-      <div class="field"><label for="pastHx">Systemic diseases / regular medication / known allergies</label><textarea id="pastHx" placeholder="e.g. K/c/o DM2, HTN on regular meds. No known drug allergies."></textarea></div>
+      <div class="field">
+        <div class="toggle-row">
+          <div>
+            <label class="toggle-label" for="noKnownSystemicHx">No known history of DM, HTN, Asthma, Epilepsy, Thyroid or TB</label>
+            <div class="toggle-help">Automatically fills the past-history field. You can still edit it manually.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="noKnownSystemicHx">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="pastHx">Systemic diseases / regular medication / known allergies</label>
+        <textarea id="pastHx" placeholder="e.g. K/c/o DM2, HTN on regular meds. No known drug allergies."></textarea>
+      </div>
     </div>
 
     <div class="section-title">Triage &amp; consultation</div>
@@ -324,6 +535,7 @@
   <div class="panel output-wrap">
     <div class="output-head">
       <h2>Formatted message</h2>
+      <button class="btn btn-reset" id="resetBtn" type="button">Reset</button>
       <button class="btn btn-copy" id="copyBtn">Copy message</button>
     </div>
     <div class="hint">Blank fields are left as dashes so the layout matches the original template.</div>
@@ -372,8 +584,12 @@ function buildMessage(){
 *PRESENTING COMPLAINTS*
 ${complaintsBold}
 
+
+
 *BRIEF HISTORY Leading to the Mentioned Presenting Complaints (Cause of Current illness / Condition)*-
 ${line(v('history'))}
+
+
 
 *VITALS*:
 *BP*- ${line(v('bp'))}
@@ -384,23 +600,37 @@ ${line(v('history'))}
 *GRBS*- ${line(v('grbs'))}
 *GCS*- ${line(v('gcs'))}
 
+
+
 *PAST HISTORY ( Any Systemic Diseases and Regular Medication Details / Any Known Allergies to Medicines)*:
 ${line(v('pastHx'))}
+
+
 
 *TRIAGE CATEGORY ( Priority & Zone )*:
 ${line(v('triage'))}
 
+
+
 *CONSULTATION CALL Given to DEPARTMENT ( Name of DMO / DSO & JR ) at TIME*:
 ${consultLine}
+
+
 
 *INVESTIGATIONS Advised*:
 ${line(v('invx'))}
 
+
+
 *TREATMENT Initiated in ER*:
 ${line(v('tx'))}
 
+
+
 *PROVISIONAL / FINAL DIAGNOSIS*:
 ${line(v('diagnosis'))}
+
+
 
 *MRD Numbers*:
 *OP*- ${line(v('mrdOp'))}
@@ -448,6 +678,31 @@ async function copyMessage(btn){
 
 document.getElementById('copyBtn').addEventListener('click', function(){ copyMessage(this); });
 document.getElementById('copyBtnMobile').addEventListener('click', function(){ copyMessage(this); });
+
+
+const noKnownSystemicHx = document.getElementById('noKnownSystemicHx');
+const pastHxField = document.getElementById('pastHx');
+const defaultPastHx = 'Not a known case of DM, HTN, Asthma, Epilepsy, Thyroid disease or TB.';
+
+noKnownSystemicHx.addEventListener('change', function(){
+  if(this.checked){
+    pastHxField.value = defaultPastHx;
+    pastHxField.dispatchEvent(new Event('input', {bubbles:true}));
+  }else if(pastHxField.value === defaultPastHx){
+    pastHxField.value = '';
+    pastHxField.dispatchEvent(new Event('input', {bubbles:true}));
+  }
+});
+
+document.getElementById('resetBtn').addEventListener('click', function(){
+  if(!confirm('Clear all case details?')) return;
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    if(el.type === 'checkbox') el.checked = false;
+    else el.value = '';
+  });
+  render();
+});
+
 
 render();
 </script>
