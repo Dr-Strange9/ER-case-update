@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ER New Case Alert Generator</title>
+<title>New Case Alert</title>
 <style>
   :root{
     --bg: #eef2f1;
@@ -78,8 +78,8 @@
   }
   @media (max-width: 860px){
     main{grid-template-columns:1fr;}
-    .output-wrap{position:static; order:-1;}
-    #output{max-height:260px;}
+    .output-wrap{position:static;}
+    #output{max-height:320px;}
   }
   .panel{
     background:var(--panel);
@@ -206,8 +206,24 @@
     font-size:11.5px;
     color:var(--ink-soft);
   }
+  .jump-link{
+    display:none;
+  }
   .float-copy{
     display:none;
+  }
+  @media (max-width:860px){
+    .jump-link{
+      display:inline-block;
+      margin-top:12px;
+      font-size:13px;
+      font-weight:600;
+      color:#fff;
+      background:var(--teal);
+      padding:9px 14px;
+      border-radius:7px;
+      text-decoration:none;
+    }
   }
   @media (max-width:860px){
     .float-copy{
@@ -234,11 +250,11 @@
 <header>
   <div class="eyebrow">New Case Alert</div>
   <h1>ER Case Alert Generator</h1>
-  <div class="sub">Fill in the fields as the case comes in. The formatted message on the right updates live — copy it and send straight to the senior doctor.</div>
+  <a href="#formStart" class="jump-link">↓ Start filling case details</a>
 </header>
 
 <main>
-  <div class="panel">
+  <div class="panel" id="formStart">
     <div class="section-title">Case identification</div>
     <div class="grid">
       <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" placeholder="e.g. 214"></div>
@@ -308,8 +324,6 @@
   </div>
 </main>
 
-<footer>Built for quick handover to the senior doctor — fill left, copy right.</footer>
-
 <div class="float-copy">
   <button class="btn btn-copy" id="copyBtnMobile">Copy message</button>
 </div>
@@ -338,7 +352,53 @@ function buildMessage(){
 
   const consultLine = `${line(v('consultDept'))}${v('consultTime') ? ' at ' + v('consultTime') : ''}`;
 
-  const msg = `*NEW CASE ALERT*\n\n*ER SL.No*- ${line(v('erSl'))}\n*First Respondant (FR)*- ${line(v('fr'))}\n*Receiving TIME*- ${line(v('recvTime'))}\n*BED No*- ${line(v('bedNo'))}\n*PATIENT NAME*- ${line(v('pname'))}\n*AGE & GENDER*- ${line(v('ageGender'))}\n*OCCUPATION*- ${line(v('occ'))}\n\n*PRESENTING COMPLAINTS*\n${complaintsBold}\n\n*BRIEF HISTORY Leading to the Mentioned Presenting Complaints (Cause of Current illness / Condition)*-\n${line(v('history'))}\n\n*VITALS*:\n*BP*- ${line(v('bp'))}\n*PR*- ${line(v('pr'))}\n*SpO2*- ${line(v('spo2'))}\n*RR*- ${line(v('rr'))}\n*TEMP*- ${line(v('temp'))}\n*GRBS*- ${line(v('grbs'))}\n*GCS*- ${line(v('gcs'))}\n\n*PAST HISTORY ( Any Systemic Diseases and Regular Medication Details / Any Known Allergies to Medicines)*:\n${line(v('pastHx'))}\n\n*TRIAGE CATEGORY ( Priority & Zone )*:\n${line(v('triage'))}\n\n*CONSULTATION CALL Given to DEPARTMENT ( Name of DMO / DSO & JR ) at TIME*:\n${consultLine}\n\n*INVESTIGATIONS Advised*:\n${line(v('invx'))}\n\n*TREATMENT Initiated in ER*:\n${line(v('tx'))}\n\n*PROVISIONAL / FINAL DIAGNOSIS*:\n${line(v('diagnosis'))}\n\n*MRD Numbers*:\n*OP*- ${line(v('mrdOp'))}\n*IP*- ${line(v('mrdIp'))}\n*DATE*- ${line(v('caseDate'))}`;
+  const msg = `*NEW CASE ALERT*
+
+*ER SL.No*- ${line(v('erSl'))}
+*First Respondant (FR)*- ${line(v('fr'))}
+*Receiving TIME*- ${line(v('recvTime'))}
+*BED No*- ${line(v('bedNo'))}
+*PATIENT NAME*- ${line(v('pname'))}
+*AGE & GENDER*- ${line(v('ageGender'))}
+*OCCUPATION*- ${line(v('occ'))}
+
+*PRESENTING COMPLAINTS*
+${complaintsBold}
+
+*BRIEF HISTORY Leading to the Mentioned Presenting Complaints (Cause of Current illness / Condition)*-
+${line(v('history'))}
+
+*VITALS*:
+*BP*- ${line(v('bp'))}
+*PR*- ${line(v('pr'))}
+*SpO2*- ${line(v('spo2'))}
+*RR*- ${line(v('rr'))}
+*TEMP*- ${line(v('temp'))}
+*GRBS*- ${line(v('grbs'))}
+*GCS*- ${line(v('gcs'))}
+
+*PAST HISTORY ( Any Systemic Diseases and Regular Medication Details / Any Known Allergies to Medicines)*:
+${line(v('pastHx'))}
+
+*TRIAGE CATEGORY ( Priority & Zone )*:
+${line(v('triage'))}
+
+*CONSULTATION CALL Given to DEPARTMENT ( Name of DMO / DSO & JR ) at TIME*:
+${consultLine}
+
+*INVESTIGATIONS Advised*:
+${line(v('invx'))}
+
+*TREATMENT Initiated in ER*:
+${line(v('tx'))}
+
+*PROVISIONAL / FINAL DIAGNOSIS*:
+${line(v('diagnosis'))}
+
+*MRD Numbers*:
+*OP*- ${line(v('mrdOp'))}
+*IP*- ${line(v('mrdIp'))}
+*DATE*- ${line(v('caseDate'))}`;
   return msg;
 }
 
