@@ -776,6 +776,80 @@
     opacity:1 !important;
   }
 
+
+  .pre-nca-settings-head{
+    display:flex !important;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .pre-nca-settings-head .pre-nca-copy{
+    flex:0 0 auto;
+    background:#263b37;
+    color:#eaf5f2;
+    border:1px solid #49635e;
+    box-shadow:none;
+  }
+  .pre-nca-settings-head .pre-nca-copy:hover{
+    background:#304a45;
+    border-color:#63817a;
+  }
+  .pre-nca-settings-head .pre-nca-copy.copied{
+    background:#17443e;
+    color:#dffff8;
+    border-color:#4e9d91;
+  }
+  @media (max-width:600px){
+    .pre-nca-settings-head{
+      align-items:flex-start;
+    }
+    .pre-nca-settings-head .pre-nca-copy{
+      padding:9px 10px;
+      font-size:11px;
+    }
+  }
+
+
+  /* Unified copy-button treatment */
+  #copyBtn{
+    background:#263b37 !important;
+    color:#eaf5f2 !important;
+    border:1px solid #49635e !important;
+    box-shadow:0 0 0 1px rgba(110,224,208,.04);
+  }
+  #copyBtn:hover{
+    background:#304a45 !important;
+    border-color:#63817a !important;
+  }
+  #copyBtn.copied{
+    background:#17443e !important;
+    color:#dffff8 !important;
+    border-color:#4e9d91 !important;
+  }
+
+  /* Make both copy actions visually distinct from ordinary controls */
+  #copyBtn,
+  #copyPreNcaBtn{
+    position:relative;
+    outline:2px solid rgba(110,224,208,.08);
+    outline-offset:2px;
+    letter-spacing:.01em;
+  }
+
+
+  /* Larger Brief History writing area, especially for mobile */
+  .history-box{
+    min-height:150px !important;
+  }
+  @media (max-width:600px){
+    .history-box{
+      min-height:220px !important;
+      height:220px !important;
+      resize:vertical;
+      line-height:1.5;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -804,9 +878,12 @@
     </div>
     <div class="settings-content">
       <div class="settings-card">
-        <div class="settings-card-head">
-          <div class="settings-card-title">🚨 Pre-NCA</div>
-          <div class="settings-card-sub">Quick pre-NCA notification template</div>
+        <div class="settings-card-head pre-nca-settings-head">
+          <div>
+            <div class="settings-card-title">🚨 Pre-NCA</div>
+            <div class="settings-card-sub">Quick pre-NCA notification template</div>
+          </div>
+          <button class="btn btn-copy pre-nca-copy" id="copyPreNcaBtn" type="button">Copy Pre-NCA</button>
         </div>
         <section class="pre-nca-panel panel" id="preNcaSection">
     <div class="pre-nca-head">
@@ -876,7 +953,7 @@
     <div class="section-title">Presenting complaints &amp; history</div>
     <div class="grid single">
       <div class="field"><label for="complaints">Presenting complaints (one per line)</label><textarea id="complaints" placeholder="e.g.&#10;Pain abdomen x 2 days&#10;Vomiting x 3 episodes"></textarea></div>
-      <div class="field"><label for="history">Brief history leading to presenting complaints</label><textarea id="history" placeholder="Onset, progression, associated factors, cause of current illness"></textarea></div>
+      <div class="field"><label for="history">Brief history leading to presenting complaints</label><textarea id="history" placeholder="Onset, progression, associated factors, cause of current illness" class="history-box"></textarea></div>
     </div>
 
     <div class="section-title">Vitals</div>
