@@ -71,9 +71,6 @@
   .settings-card-head{background:linear-gradient(90deg,rgba(255,107,97,.09),transparent)}
   .pre-nca-preview-wrap{background:var(--panel)}
   .toggle-row{background:#16312d}
-  .float-copy{
-    background:rgba(13,23,22,.96);
-  }
   .theme-settings-card{
     margin-bottom:12px;
     padding:14px 16px;
@@ -432,10 +429,6 @@
     text-align:center;
   }
 
-  .float-copy{
-    display:none;
-  }
-
   footer{
     max-width:1080px;
     margin:24px auto 0;
@@ -536,7 +529,6 @@
       padding:12px 12px 12px 14px;
     }
     .output-head h2{font-size:10.5px}
-    .output-head .btn-copy{display:none}
     .hint{
       padding:9px 14px 0;
       font-size:10px;
@@ -546,26 +538,6 @@
       padding:14px;
       font-size:12px;
       line-height:1.65;
-    }
-
-    .float-copy{
-      display:block;
-      position:fixed;
-      left:0;right:0;bottom:0;
-      z-index:100;
-      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
-      background:rgba(255,255,255,.96);
-      border-top:1px solid var(--line);
-      box-shadow:0 -5px 20px rgba(8,63,58,.10);
-      backdrop-filter:blur(10px);
-    }
-    .float-copy .btn-copy{
-      display:block;
-      width:100%;
-      min-height:48px;
-      padding:12px 14px;
-      border-radius:10px;
-      font-size:14px;
     }
 
     footer{
@@ -850,6 +822,18 @@
     }
   }
 
+  /* Larger boxes for fields that tend to need more writing room */
+  .lg-box{
+    min-height:120px !important;
+    resize:vertical;
+  }
+  @media (max-width:600px){
+    .lg-box{
+      min-height:160px !important;
+      line-height:1.5;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -921,7 +905,7 @@
       </div>
       <div class="field wide">
         <label for="preNcaFr">First Respondant (FR &amp; Co-FR)</label>
-        <input id="preNcaFr" placeholder="FR &amp; Co-FR names">
+        <textarea id="preNcaFr" class="lg-box" placeholder="FR &amp; Co-FR names"></textarea>
       </div>
     </div>
 
@@ -952,13 +936,13 @@
 
     <div class="section-title">Presenting complaints &amp; history</div>
     <div class="grid single">
-      <div class="field"><label for="complaints">Presenting complaints (one per line)</label><textarea id="complaints" placeholder="e.g.&#10;Pain abdomen x 2 days&#10;Vomiting x 3 episodes"></textarea></div>
+      <div class="field"><label for="complaints">Presenting complaints (one per line)</label><textarea id="complaints" class="lg-box" placeholder="e.g.&#10;Pain abdomen x 2 days&#10;Vomiting x 3 episodes"></textarea></div>
       <div class="field"><label for="history">Brief history leading to presenting complaints</label><textarea id="history" placeholder="Onset, progression, associated factors, cause of current illness" class="history-box"></textarea></div>
     </div>
 
     <div class="section-title">Vitals</div>
     <div class="vitals-grid">
-      <div class="field"><label for="bp">BP</label><input id="bp" inputmode="decimal" placeholder="mmHg"></div>
+      <div class="field"><label for="bp">BP</label><input id="bp" type="text" inputmode="text" placeholder="e.g. 120/80 mmHg"></div>
       <div class="field"><label for="pr">PR</label><input id="pr" inputmode="numeric" placeholder="/min"></div>
       <div class="field"><label for="spo2">SpO2</label><input id="spo2" inputmode="decimal" placeholder="%"></div>
       <div class="field"><label for="rr">RR</label><input id="rr" inputmode="numeric" placeholder="/min"></div>
@@ -989,15 +973,24 @@
 
     <div class="section-title">Triage &amp; consultation</div>
     <div class="grid">
-      <div class="field wide"><label for="triage">Triage category (priority &amp; zone)</label><input id="triage" placeholder="e.g. Priority I / Red zone"></div>
-      <div class="field"><label for="consultDept">Consultation call — department / doctor (DMO/DSO/JR)</label><input id="consultDept" placeholder="e.g. Surgery — Dr. X (JR)"></div>
+      <div class="field wide">
+        <label for="triage">Triage category (priority &amp; zone)</label>
+        <select id="triage">
+          <option value="">Select triage category</option>
+          <option value="Red zone and priority 1">Red zone and priority 1</option>
+          <option value="Yellow zone and priority 2">Yellow zone and priority 2</option>
+          <option value="Green zone and priority 3">Green zone and priority 3</option>
+          <option value="Black zone and priority 4">Black zone and priority 4</option>
+        </select>
+      </div>
+      <div class="field"><label for="consultDept">Consultation call — department / doctor (DMO/DSO/JR)</label><textarea id="consultDept" class="lg-box" placeholder="e.g. Surgery — Dr. X (JR)"></textarea></div>
       <div class="field"><label for="consultTime">Consultation call — time</label><input id="consultTime" type="time"></div>
     </div>
 
     <div class="section-title">Workup &amp; treatment</div>
     <div class="grid single">
-      <div class="field"><label for="invx">Investigations advised</label><textarea id="invx" placeholder="e.g. CBP, RFT, LFT, USG abdomen"></textarea></div>
-      <div class="field"><label for="tx">Treatment initiated in ER</label><textarea id="tx" placeholder="e.g. IVF NS started, Inj. Pantop IV stat"></textarea></div>
+      <div class="field"><label for="invx">Investigations advised</label><textarea id="invx" class="lg-box" placeholder="e.g. CBP, RFT, LFT, USG abdomen"></textarea></div>
+      <div class="field"><label for="tx">Treatment initiated in ER</label><textarea id="tx" class="lg-box" placeholder="e.g. IVF NS started, Inj. Pantop IV stat"></textarea></div>
       <div class="field"><label for="diagnosis">Provisional / final diagnosis</label><textarea id="diagnosis" placeholder="e.g. ? Acute appendicitis"></textarea></div>
     </div>
 
@@ -1020,10 +1013,6 @@
   </div>
 </main>
 
-<div class="float-copy">
-  <button class="btn btn-copy" id="copyBtnMobile">Copy message</button>
-</div>
-
 <script>
 function v(id){
   const el = document.getElementById(id);
@@ -1031,6 +1020,27 @@ function v(id){
 }
 function line(val){
   return val ? val : "";
+}
+function formatDateDMY(value){
+  if(!value) return "";
+  const parts = value.split('-'); // yyyy-mm-dd from <input type=date>
+  if(parts.length !== 3) return value;
+  const [y,m,d] = parts;
+  return `${d}-${m}-${y}`;
+}
+function formatTime12h(value){
+  if(!value) return "";
+  const bits = value.split(':');
+  if(bits.length < 2) return value;
+  let h = parseInt(bits[0], 10);
+  const m = bits[1];
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12;
+  if(h === 0) h = 12;
+  return `${h}:${m} ${ampm}`;
+}
+function withUnit(value, unit){
+  return value ? `${value} ${unit}` : value;
 }
 function buildMessage(){
   const complaintsRaw = v('complaints');
@@ -1046,7 +1056,7 @@ function buildMessage(){
     complaintsBold = items.map((c,i)=>`*${i+1}).*\n${c}`).join('\n');
   }
 
-  const consultLine = `${line(v('consultDept'))}${v('consultTime') ? ' at ' + v('consultTime') : ''}`;
+  const consultLine = `${line(v('consultDept'))}${v('consultTime') ? ' at ' + formatTime12h(v('consultTime')) : ''}`;
 
   const msg = `*NEW CASE ALERT*
 
@@ -1054,7 +1064,7 @@ function buildMessage(){
 
 *First Respondant (FR)*- ${line(v('fr'))}
 
-*Receiving TIME*- ${line(v('recvTime'))}
+*Receiving TIME*- ${formatTime12h(v('recvTime'))}
 
 *BED No*- ${line(v('bedNo'))}
 
@@ -1075,12 +1085,12 @@ ${line(v('history'))}
 
 
 *VITALS*:
-*BP*- ${line(v('bp'))}
-*PR*- ${line(v('pr'))}
-*SpO2*- ${line(v('spo2'))}
-*RR*- ${line(v('rr'))}
-*TEMP*- ${line(v('temp'))}
-*GRBS*- ${line(v('grbs'))}
+*BP*- ${withUnit(line(v('bp')), 'mmHg')}
+*PR*- ${withUnit(line(v('pr')), 'bpm')}
+*SpO2*- ${withUnit(line(v('spo2')), '%')}
+*RR*- ${withUnit(line(v('rr')), '/min')}
+*TEMP*- ${withUnit(line(v('temp')), '°F')}
+*GRBS*- ${withUnit(line(v('grbs')), 'mg/dl')}
 *GCS*- ${line(v('gcs'))}
 
 
@@ -1118,7 +1128,7 @@ ${line(v('diagnosis'))}
 *MRD Numbers*:
 *OP*- ${line(v('mrdOp'))}
 *IP*- ${line(v('mrdIp'))}
-*DATE*- ${line(v('caseDate'))}`;
+*DATE*- ${formatDateDMY(v('caseDate'))}`;
   return msg;
 }
 
@@ -1135,10 +1145,15 @@ function buildPreNcaMessage(){
   return `🚨*Pre-NCA*
 
 *SL.NO*- ${line(v('preNcaSl'))}
-*RECEIVING TIME* - ${line(v('preNcaTime'))}
+
+*RECEIVING TIME* - ${formatTime12h(v('preNcaTime'))}
+
 *BED NO.*- ${line(v('preNcaBed'))}
+
 *PT NAME* - ${line(v('preNcaName'))}
+
 *AGE & GENDER* - ${line(v('preNcaAgeGender'))}
+
 *PRESENTING COMPLAINTS*-
 ${complaints || ""}
 
@@ -1156,8 +1171,9 @@ function render(){
   renderPreNca();
 }
 
-document.querySelectorAll('input, textarea').forEach(el=>{
+document.querySelectorAll('input, textarea, select').forEach(el=>{
   el.addEventListener('input', render);
+  el.addEventListener('change', render);
 });
 
 async function copyMessage(btn){
@@ -1228,7 +1244,6 @@ async function copyText(text, btn){
 }
 
 document.getElementById('copyBtn').addEventListener('click', function(){ copyMessage(this); });
-document.getElementById('copyBtnMobile').addEventListener('click', function(){ copyMessage(this); });
 
 
 const noKnownSystemicHx = document.getElementById('noKnownSystemicHx');
