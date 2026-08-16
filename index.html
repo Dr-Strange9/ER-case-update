@@ -71,6 +71,9 @@
   .settings-card-head{background:linear-gradient(90deg,rgba(255,107,97,.09),transparent)}
   .pre-nca-preview-wrap{background:var(--panel)}
   .toggle-row{background:#16312d}
+  .float-copy{
+    background:rgba(13,23,22,.96);
+  }
   .theme-settings-card{
     margin-bottom:12px;
     padding:14px 16px;
@@ -429,6 +432,9 @@
     text-align:center;
   }
 
+  .float-copy{
+    display:none;
+  }
 
   footer{
     max-width:1080px;
@@ -542,6 +548,25 @@
       line-height:1.65;
     }
 
+    .float-copy{
+      display:block;
+      position:fixed;
+      left:0;right:0;bottom:0;
+      z-index:100;
+      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+      background:rgba(255,255,255,.96);
+      border-top:1px solid var(--line);
+      box-shadow:0 -5px 20px rgba(8,63,58,.10);
+      backdrop-filter:blur(10px);
+    }
+    .float-copy .btn-copy{
+      display:block;
+      width:100%;
+      min-height:48px;
+      padding:12px 14px;
+      border-radius:10px;
+      font-size:14px;
+    }
 
     footer{
       padding:0 14px;
@@ -1091,119 +1116,6 @@
     }
   }
 
-
-  /* Final dark Pre-NCA UI */
-  .settings-card{
-    background:#13211f !important;
-    border:1px solid #49635e !important;
-    border-radius:14px !important;
-    overflow:hidden !important;
-  }
-  .settings-card-head.pre-nca-settings-head{
-    background:#182b28 !important;
-    border-bottom:1px solid #49635e !important;
-  }
-  .settings-card .pre-nca-panel{
-    margin:0 !important;
-    border:0 !important;
-    border-radius:0 !important;
-    background:#13211f !important;
-    box-shadow:none !important;
-  }
-  .settings-card .pre-nca-grid{
-    background:#13211f !important;
-  }
-  .settings-card .pre-nca-preview-wrap{
-    background:#0b1614 !important;
-    border-top:1px solid #35504b !important;
-  }
-  .settings-card .pre-nca-output{
-    background:#0b1614 !important;
-    color:#fff !important;
-  }
-  .settings-card .pre-nca-output strong{
-    color:#7ce7d7 !important;
-  }
-  .settings-card .pre-nca-copy,
-  #copyBtn{
-    background:#263b37 !important;
-    color:#eaf5f2 !important;
-    border:1px solid #49635e !important;
-    box-shadow:0 0 0 2px rgba(110,224,208,.07) !important;
-  }
-  .settings-card .pre-nca-copy:hover,
-  #copyBtn:hover{
-    background:#304a45 !important;
-    border-color:#6eaaa0 !important;
-  }
-  .settings-card .pre-nca-copy.copied,
-  #copyBtn.copied{
-    background:#17443e !important;
-    border-color:#4e9d91 !important;
-    color:#dffff8 !important;
-  }
-  input[type="time"]{color-scheme:dark}
-
-  @media (max-width:600px){
-    .settings-content{padding:8px !important}
-    .settings-card{border-radius:12px !important}
-    .settings-card-head.pre-nca-settings-head{padding:13px 12px !important}
-    .settings-card .pre-nca-grid{padding:13px 12px 16px !important}
-    .settings-card .pre-nca-output{
-      padding:8px 12px 16px !important;
-      font-size:12px !important;
-      line-height:1.7 !important;
-    }
-  }
-
-
-  /* First Respondent fields: two-line writing without breaking the grid */
-  .respondent-box,
-  .pre-nca-respondent-box{
-    display:block;
-    width:100%;
-    min-width:0;
-    max-width:100%;
-    min-height:76px !important;
-    height:76px !important;
-    resize:vertical !important;
-    line-height:1.5 !important;
-    padding:12px 13px !important;
-    white-space:pre-wrap !important;
-    overflow-wrap:anywhere;
-  }
-
-  /* Prevent iPhone Safari time controls from overflowing into the next grid column */
-  .grid > .field{
-    min-width:0;
-  }
-  .grid > .field > input,
-  .grid > .field > textarea,
-  .grid > .field > select{
-    min-width:0;
-    max-width:100%;
-  }
-  input[type="time"]{
-    width:100%;
-    min-width:0 !important;
-    max-width:100%;
-  }
-
-  @media (max-width:600px){
-    .respondent-box,
-    .pre-nca-respondent-box{
-      min-height:86px !important;
-      height:86px !important;
-      font-size:16px !important;
-      line-height:1.5 !important;
-      padding:12px 13px !important;
-    }
-
-    .grid{
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-    }
-  }
-
 </style>
 </head>
 <body>
@@ -1245,7 +1157,7 @@
         <div class="pre-nca-badge">🚨 PRE-NCA</div>
         <div class="pre-nca-sub">Quick pre-NCA notification</div>
       </div>
-      
+      <button class="btn btn-copy pre-nca-copy" id="copyPreNcaBtn" type="button">Copy Pre-NCA</button>
     </div>
 
     <div class="grid pre-nca-grid">
@@ -1275,7 +1187,7 @@
       </div>
       <div class="field wide">
         <label for="preNcaFr">First Respondant (FR &amp; Co-FR)</label>
-        <textarea id="preNcaFr" placeholder="FR &amp; Co-FR names" class="pre-nca-respondent-box"></textarea>
+        <input id="preNcaFr" placeholder="FR &amp; Co-FR names">
       </div>
     </div>
 
@@ -1291,16 +1203,16 @@
   <div class="panel" id="formStart">
     <div class="section-title">Case identification</div>
     <div class="grid">
-      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" placeholder="e.g. 214"></div>
-      <div class="field"><label for="fr">First Respondent (FR)</label><textarea id="fr" inputmode="text" placeholder="Name" class="respondent-box"></textarea></div>
+      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" inputmode="numeric" placeholder="e.g. 214"></div>
+      <div class="field"><label for="fr">First Respondent (FR)</label><input id="fr" inputmode="text" placeholder="Name"></div>
       <div class="field"><label for="recvTime">Receiving time</label><input id="recvTime" type="time"></div>
-      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" placeholder="e.g. ER-4"></div>
+      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" inputmode="text" placeholder="e.g. ER-4"></div>
     </div>
 
     <div class="section-title">Patient details</div>
     <div class="grid">
-      <div class="field wide"><label for="pname">Patient name</label><input id="pname" autocomplete="name" placeholder="Full name"></div>
-      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" inputmode="text" placeholder="e.g. 45 / M"></div>
+      <div class="field wide"><label for="pname">Patient name</label><input id="pname" autocomplete="name" autocomplete="name" placeholder="Full name"></div>
+      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" inputmode="text" inputmode="text" placeholder="e.g. 45 / M"></div>
       <div class="field"><label for="occ">Occupation</label><input id="occ" placeholder="e.g. Farmer"></div>
     </div>
 
@@ -1374,33 +1286,14 @@
   </div>
 </main>
 
+<div class="float-copy">
+  <button class="btn btn-copy" id="copyBtnMobile">Copy message</button>
+</div>
+
 <script>
 function v(id){
   const el = document.getElementById(id);
   return el.value.trim();
-}
-
-function formatTime12h(value){
-  if(!value) return "";
-  const raw = String(value).trim();
-
-  const ampm = raw.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-  if(ampm){
-    const h = parseInt(ampm[1],10);
-    return (h >= 1 && h <= 12) ? `${h}:${ampm[2]} ${ampm[3].toUpperCase()}` : raw;
-  }
-
-  const parts = raw.split(':');
-  if(parts.length < 2) return raw;
-
-  let h = parseInt(parts[0],10);
-  const m = parts[1];
-  if(Number.isNaN(h) || Number.isNaN(parseInt(m,10))) return raw;
-
-  const suffix = h >= 12 ? 'PM' : 'AM';
-  h = h % 12;
-  if(h === 0) h = 12;
-  return `${h}:${m} ${suffix}`;
 }
 function line(val){
   return val ? val : "";
@@ -1419,13 +1312,13 @@ function buildMessage(){
     complaintsBold = items.map((c,i)=>`*${i+1}).*\n${c}`).join('\n');
   }
 
-  const consultLine = `${line(v('consultDept'))}${v('consultTime') ? ' at ' + formatTime12h(v('consultTime')) : ''}`;
+  const consultLine = `${line(v('consultDept'))}${v('consultTime') ? ' at ' + v('consultTime') : ''}`;
 
   const msg = `*NEW CASE ALERT*
 
 *ER SL.No*- ${line(v('erSl'))}
 *First Respondant (FR)*- ${line(v('fr'))}
-*Receiving TIME*- ${formatTime12h(v('recvTime'))}
+*Receiving TIME*- ${line(v('recvTime'))}
 *BED No*- ${line(v('bedNo'))}
 *PATIENT NAME*- ${line(v('pname'))}
 *AGE & GENDER*- ${line(v('ageGender'))}
@@ -1502,7 +1395,7 @@ function buildPreNcaMessage(){
   return `🚨*Pre-NCA*
 
 *SL.NO*- ${line(v('preNcaSl'))}
-*RECEIVING TIME* - ${formatTime12h(v('preNcaTime'))}
+*RECEIVING TIME* - ${line(v('preNcaTime'))}
 *BED NO.*- ${line(v('preNcaBed'))}
 *PT NAME* - ${line(v('preNcaName'))}
 *AGE & GENDER* - ${line(v('preNcaAgeGender'))}
@@ -1595,6 +1488,8 @@ async function copyText(text, btn){
 }
 
 document.getElementById('copyBtn').addEventListener('click', function(){ copyMessage(this); });
+document.getElementById('copyBtnMobile').addEventListener('click', function(){ copyMessage(this); });
+
 
 const noKnownSystemicHx = document.getElementById('noKnownSystemicHx');
 const pastHxField = document.getElementById('pastHx');
