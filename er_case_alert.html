@@ -71,6 +71,9 @@
   .settings-card-head{background:linear-gradient(90deg,rgba(255,107,97,.09),transparent)}
   .pre-nca-preview-wrap{background:var(--panel)}
   .toggle-row{background:#16312d}
+  .float-copy{
+    background:rgba(13,23,22,.96);
+  }
   .theme-settings-card{
     margin-bottom:12px;
     padding:14px 16px;
@@ -429,6 +432,10 @@
     text-align:center;
   }
 
+  .float-copy{
+    display:none;
+  }
+
   footer{
     max-width:1080px;
     margin:24px auto 0;
@@ -529,6 +536,7 @@
       padding:12px 12px 12px 14px;
     }
     .output-head h2{font-size:10.5px}
+    .output-head .btn-copy{display:none}
     .hint{
       padding:9px 14px 0;
       font-size:10px;
@@ -538,6 +546,26 @@
       padding:14px;
       font-size:12px;
       line-height:1.65;
+    }
+
+    .float-copy{
+      display:block;
+      position:fixed;
+      left:0;right:0;bottom:0;
+      z-index:100;
+      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+      background:rgba(255,255,255,.96);
+      border-top:1px solid var(--line);
+      box-shadow:0 -5px 20px rgba(8,63,58,.10);
+      backdrop-filter:blur(10px);
+    }
+    .float-copy .btn-copy{
+      display:block;
+      width:100%;
+      min-height:48px;
+      padding:12px 14px;
+      border-radius:10px;
+      font-size:14px;
     }
 
     footer{
@@ -822,49 +850,290 @@
     }
   }
 
-  /* Larger boxes for fields that tend to need more writing room */
-  .lg-box{
-    min-height:120px !important;
-    resize:vertical;
-  }
+
+  /* Phone-first usability refinements */
+  .complaints-box{min-height:110px}
+
+  .mobile-actions{display:none}
+
   @media (max-width:600px){
-    .lg-box{
-      min-height:160px !important;
-      line-height:1.5;
+    body{
+      padding-bottom:76px;
+    }
+
+    header{
+      padding:14px 12px 10px;
+    }
+
+    .title-row{
+      gap:10px;
+    }
+
+    h1{
+      font-size:23px;
+      line-height:1.1;
+    }
+
+    .settings-btn{
+      min-height:42px;
+      padding:9px 11px;
+      border-radius:10px;
+      white-space:nowrap;
+    }
+
+    main{
+      padding:0 8px;
+      gap:10px;
+    }
+
+    .panel{
+      border-radius:11px;
+    }
+
+    .section-title{
+      position:sticky;
+      top:0;
+      z-index:5;
+      padding:12px 12px 8px;
+      background:var(--panel);
+      border-bottom:1px solid rgba(73,99,94,.45);
+    }
+
+    .grid,
+    .vitals-grid,
+    .mrd-grid{
+      padding-left:12px;
+      padding-right:12px;
+      gap:9px 10px;
+    }
+
+    .field{
+      gap:5px;
+    }
+
+    label{
+      font-size:10.5px;
+    }
+
+    input,
+    textarea,
+    select{
+      min-height:47px;
+      font-size:16px;
+    }
+
+    textarea{
+      min-height:90px;
+    }
+
+    .complaints-box{
+      min-height:150px !important;
+      height:150px;
+    }
+
+    .history-box{
+      min-height:240px !important;
+      height:240px !important;
+    }
+
+    /* Keep vitals compact but easy to tap */
+    .vitals-grid input{
+      min-height:48px;
+      text-align:center;
+      padding-left:7px;
+      padding-right:7px;
+    }
+
+    /* Compact floating mobile actions */
+    .mobile-actions{
+      display:flex;
+      position:fixed;
+      right:12px;
+      bottom:calc(14px + env(safe-area-inset-bottom));
+      left:auto;
+      z-index:150;
+      gap:7px;
+      padding:0;
+      background:transparent;
+      border:0;
+      box-shadow:none;
+      backdrop-filter:none;
+    }
+
+    .mobile-copy-btn{
+      flex:0 0 auto;
+      min-height:46px;
+      min-width:156px;
+      padding:10px 16px;
+      border:1px solid #58736d;
+      border-radius:12px;
+      background:#263b37;
+      color:#fff;
+      font:800 13px var(--sans);
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,.28);
+    }
+
+    .mobile-copy-btn:hover,
+    .mobile-copy-btn:active{
+      background:#304a45;
+      border-color:#6eaaa0;
+    }
+
+    .mobile-copy-btn.copied{
+      background:#17443e;
+      border-color:#4e9d91;
+    }
+
+    .mobile-top-btn{
+      flex:0 0 46px;
+      min-height:46px;
+      border:1px solid #49635e;
+      border-radius:12px;
+      background:#132522;
+      color:#eaf5f2;
+      font:800 17px var(--sans);
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,.25);
+    }
+
+    /* Pre-NCA drawer becomes a true full-screen mobile sheet */
+    .settings-drawer{
+      width:100vw;
+      transform:translateY(105%);
+      right:0;
+      top:0;
+      bottom:0;
+      border-radius:0;
+    }
+
+    body.settings-open .settings-drawer{
+      transform:translateY(0);
+    }
+
+    .settings-head{
+      padding-top:calc(12px + env(safe-area-inset-top));
+    }
+
+    .settings-content{
+      padding:10px 9px calc(20px + env(safe-area-inset-bottom));
+    }
+
+    .settings-card{
+      border-radius:11px;
+    }
+
+    .pre-nca-settings-head{
+      position:sticky;
+      top:0;
+      z-index:4;
+      padding:12px;
+    }
+
+    .pre-nca-settings-head .pre-nca-copy{
+      min-height:42px;
+      padding:9px 10px;
+    }
+
+    /* Avoid accidental horizontal overflow on very narrow phones */
+    .grid,
+    .vitals-grid,
+    .mrd-grid,
+    .field,
+    input,
+    textarea,
+    select{
+      min-width:0;
+      max-width:100%;
+    }
+  }
+
+  @media (max-width:360px){
+    header{
+      padding-left:9px;
+      padding-right:9px;
+    }
+
+    h1{
+      font-size:21px;
+    }
+
+    .settings-btn{
+      font-size:10.5px;
+      padding:8px 9px;
+    }
+
+    .grid{
+      grid-template-columns:1fr;
+    }
+
+    .vitals-grid,
+    .mrd-grid{
+      grid-template-columns:1fr 1fr;
     }
   }
 
 
-  /* Pre-NCA: remove the white card appearance and match the dark UI */
+  @media (max-width:600px){
+    .jump-link{
+      display:inline-flex;
+      align-items:center;
+      min-height:44px;
+      padding:10px 15px;
+      margin-top:8px;
+      border-radius:10px;
+      font-size:12px;
+      box-shadow:none;
+    }
+
+    /* Keep the page content comfortably inside the viewport */
+    header{
+      padding-left:12px;
+      padding-right:12px;
+    }
+
+    /* Avoid fixed section headings covering focused fields */
+    .section-title{
+      scroll-margin-top:8px;
+    }
+
+    /* More usable complaint/history writing areas */
+    .complaints-box{
+      min-height:145px !important;
+      height:145px;
+    }
+    .history-box{
+      min-height:220px !important;
+      height:220px !important;
+    }
+  }
+
+
+  @media (max-width:600px){
+    input[type="time"]{
+      text-align:left;
+      padding-right:10px;
+    }
+  }
+
+
+  /* Final dark Pre-NCA UI */
   .settings-card{
     background:#13211f !important;
     border:1px solid #49635e !important;
+    border-radius:14px !important;
+    overflow:hidden !important;
   }
   .settings-card-head.pre-nca-settings-head{
     background:#182b28 !important;
     border-bottom:1px solid #49635e !important;
-    padding:14px 16px !important;
-  }
-  .settings-card-title{
-    color:#fff !important;
-    font-size:15px !important;
-    font-weight:900 !important;
-  }
-  .settings-card-sub{
-    color:#b8c9c5 !important;
-    font-size:11px !important;
   }
   .settings-card .pre-nca-panel{
     margin:0 !important;
-    max-width:none !important;
     border:0 !important;
     border-radius:0 !important;
     background:#13211f !important;
     box-shadow:none !important;
-  }
-  .settings-card .pre-nca-head{
-    background:#10211e !important;
-    border-bottom:1px solid #35504b !important;
   }
   .settings-card .pre-nca-grid{
     background:#13211f !important;
@@ -873,9 +1142,6 @@
     background:#0b1614 !important;
     border-top:1px solid #35504b !important;
   }
-  .settings-card .pre-nca-preview-title{
-    color:#6ee0d0 !important;
-  }
   .settings-card .pre-nca-output{
     background:#0b1614 !important;
     color:#fff !important;
@@ -883,21 +1149,29 @@
   .settings-card .pre-nca-output strong{
     color:#7ce7d7 !important;
   }
-  .settings-card .pre-nca-copy{
+  .settings-card .pre-nca-copy,
+  #copyBtn,
+  #copyBtnMobile{
     background:#263b37 !important;
     color:#eaf5f2 !important;
     border:1px solid #49635e !important;
     box-shadow:0 0 0 2px rgba(110,224,208,.07) !important;
   }
-  .settings-card .pre-nca-copy:hover{
+  .settings-card .pre-nca-copy:hover,
+  #copyBtn:hover,
+  #copyBtnMobile:hover{
     background:#304a45 !important;
     border-color:#6eaaa0 !important;
   }
-  .settings-card .pre-nca-copy.copied{
+  .settings-card .pre-nca-copy.copied,
+  #copyBtn.copied,
+  #copyBtnMobile.copied{
     background:#17443e !important;
     border-color:#4e9d91 !important;
     color:#dffff8 !important;
   }
+  input[type="time"]{color-scheme:dark}
+
   @media (max-width:600px){
     .settings-content{padding:8px !important}
     .settings-card{border-radius:12px !important}
@@ -907,6 +1181,49 @@
       padding:8px 12px 16px !important;
       font-size:12px !important;
       line-height:1.7 !important;
+    }
+  }
+
+
+  /* Larger First Respondent fields */
+  .respondent-box,
+  .pre-nca-respondent-box{
+    min-height:54px !important;
+    padding-top:13px !important;
+    padding-bottom:13px !important;
+  }
+
+  @media (max-width:600px){
+    .respondent-box,
+    .pre-nca-respondent-box{
+      min-height:68px !important;
+      height:68px !important;
+      font-size:16px !important;
+      line-height:1.45 !important;
+      padding:12px 13px !important;
+    }
+  }
+
+
+  /* Respondent fields: allow two lines of text */
+  .respondent-box,
+  .pre-nca-respondent-box{
+    min-height:76px !important;
+    height:76px !important;
+    resize:vertical !important;
+    line-height:1.5 !important;
+    padding:12px 13px !important;
+    white-space:pre-wrap !important;
+  }
+
+  @media (max-width:600px){
+    .respondent-box,
+    .pre-nca-respondent-box{
+      min-height:86px !important;
+      height:86px !important;
+      font-size:16px !important;
+      line-height:1.5 !important;
+      padding:12px 13px !important;
     }
   }
 
@@ -981,7 +1298,7 @@
       </div>
       <div class="field wide">
         <label for="preNcaFr">First Respondant (FR &amp; Co-FR)</label>
-        <textarea id="preNcaFr" class="lg-box" placeholder="FR &amp; Co-FR names"></textarea>
+        <input id="preNcaFr" placeholder="FR &amp; Co-FR names" class="pre-nca-respondent-box">
       </div>
     </div>
 
@@ -997,28 +1314,28 @@
   <div class="panel" id="formStart">
     <div class="section-title">Case identification</div>
     <div class="grid">
-      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" placeholder="e.g. 214"></div>
-      <div class="field"><label for="fr">First Respondent (FR)</label><input id="fr" placeholder="Name"></div>
+      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" inputmode="numeric" placeholder="e.g. 214"></div>
+      <div class="field"><label for="fr">First Respondent (FR)</label><textarea id="fr" inputmode="text" placeholder="Name" class="respondent-box"></textarea></div>
       <div class="field"><label for="recvTime">Receiving time</label><input id="recvTime" type="time"></div>
-      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" placeholder="e.g. ER-4"></div>
+      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" inputmode="text" placeholder="e.g. ER-4"></div>
     </div>
 
     <div class="section-title">Patient details</div>
     <div class="grid">
-      <div class="field wide"><label for="pname">Patient name</label><input id="pname" autocomplete="name" placeholder="Full name"></div>
-      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" inputmode="text" placeholder="e.g. 45 / M"></div>
+      <div class="field wide"><label for="pname">Patient name</label><input id="pname" autocomplete="name" autocomplete="name" placeholder="Full name"></div>
+      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" inputmode="text" inputmode="text" placeholder="e.g. 45 / M"></div>
       <div class="field"><label for="occ">Occupation</label><input id="occ" placeholder="e.g. Farmer"></div>
     </div>
 
     <div class="section-title">Presenting complaints &amp; history</div>
     <div class="grid single">
-      <div class="field"><label for="complaints">Presenting complaints (one per line)</label><textarea id="complaints" class="lg-box" placeholder="e.g.&#10;Pain abdomen x 2 days&#10;Vomiting x 3 episodes"></textarea></div>
+      <div class="field"><label for="complaints">Presenting complaints (one per line)</label><textarea id="complaints" placeholder="e.g.&#10;Pain abdomen x 2 days&#10;Vomiting x 3 episodes" class="complaints-box"></textarea></div>
       <div class="field"><label for="history">Brief history leading to presenting complaints</label><textarea id="history" placeholder="Onset, progression, associated factors, cause of current illness" class="history-box"></textarea></div>
     </div>
 
     <div class="section-title">Vitals</div>
     <div class="vitals-grid">
-      <div class="field"><label for="bp">BP</label><input id="bp" type="text" inputmode="text" placeholder="e.g. 120/80 mmHg"></div>
+      <div class="field"><label for="bp">BP</label><input id="bp" inputmode="decimal" placeholder="mmHg"></div>
       <div class="field"><label for="pr">PR</label><input id="pr" inputmode="numeric" placeholder="/min"></div>
       <div class="field"><label for="spo2">SpO2</label><input id="spo2" inputmode="decimal" placeholder="%"></div>
       <div class="field"><label for="rr">RR</label><input id="rr" inputmode="numeric" placeholder="/min"></div>
@@ -1049,24 +1366,15 @@
 
     <div class="section-title">Triage &amp; consultation</div>
     <div class="grid">
-      <div class="field wide">
-        <label for="triage">Triage category (priority &amp; zone)</label>
-        <select id="triage">
-          <option value="">Select triage category</option>
-          <option value="Red zone and priority 1">Red zone and priority 1</option>
-          <option value="Yellow zone and priority 2">Yellow zone and priority 2</option>
-          <option value="Green zone and priority 3">Green zone and priority 3</option>
-          <option value="Black zone and priority 4">Black zone and priority 4</option>
-        </select>
-      </div>
-      <div class="field"><label for="consultDept">Consultation call — department / doctor (DMO/DSO/JR)</label><textarea id="consultDept" class="lg-box" placeholder="e.g. Surgery — Dr. X (JR)"></textarea></div>
+      <div class="field wide"><label for="triage">Triage category (priority &amp; zone)</label><input id="triage" placeholder="e.g. Priority I / Red zone"></div>
+      <div class="field"><label for="consultDept">Consultation call — department / doctor (DMO/DSO/JR)</label><input id="consultDept" placeholder="e.g. Surgery — Dr. X (JR)"></div>
       <div class="field"><label for="consultTime">Consultation call — time</label><input id="consultTime" type="time"></div>
     </div>
 
     <div class="section-title">Workup &amp; treatment</div>
     <div class="grid single">
-      <div class="field"><label for="invx">Investigations advised</label><textarea id="invx" class="lg-box" placeholder="e.g. CBP, RFT, LFT, USG abdomen"></textarea></div>
-      <div class="field"><label for="tx">Treatment initiated in ER</label><textarea id="tx" class="lg-box" placeholder="e.g. IVF NS started, Inj. Pantop IV stat"></textarea></div>
+      <div class="field"><label for="invx">Investigations advised</label><textarea id="invx" placeholder="e.g. CBP, RFT, LFT, USG abdomen"></textarea></div>
+      <div class="field"><label for="tx">Treatment initiated in ER</label><textarea id="tx" placeholder="e.g. IVF NS started, Inj. Pantop IV stat"></textarea></div>
       <div class="field"><label for="diagnosis">Provisional / final diagnosis</label><textarea id="diagnosis" placeholder="e.g. ? Acute appendicitis"></textarea></div>
     </div>
 
@@ -1089,49 +1397,40 @@
   </div>
 </main>
 
+<div class="float-copy">
+  <button class="btn btn-copy" id="copyBtnMobile">Copy message</button>
+</div>
+
 <script>
 function v(id){
   const el = document.getElementById(id);
   return el.value.trim();
 }
-function line(val){
-  return val ? val : "";
-}
-function formatDateDMY(value){
-  if(!value) return "";
-  const parts = value.split('-'); // yyyy-mm-dd from <input type=date>
-  if(parts.length !== 3) return value;
-  const [y,m,d] = parts;
-  return `${d}-${m}-${y}`;
-}
+
 function formatTime12h(value){
   if(!value) return "";
   const raw = String(value).trim();
 
-  // Accept both native 24-hour values (HH:MM) and 12-hour values with AM/PM.
-  const ampmMatch = raw.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
-  if(ampmMatch){
-    const h = parseInt(ampmMatch[1], 10);
-    const m = ampmMatch[2];
-    const ap = ampmMatch[3].toUpperCase();
-    if(h >= 1 && h <= 12) return `${h}:${m} ${ap}`;
-    return raw;
+  const ampm = raw.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if(ampm){
+    const h = parseInt(ampm[1],10);
+    return (h >= 1 && h <= 12) ? `${h}:${ampm[2]} ${ampm[3].toUpperCase()}` : raw;
   }
 
-  const bits = raw.split(':');
-  if(bits.length < 2) return raw;
+  const parts = raw.split(':');
+  if(parts.length < 2) return raw;
 
-  let h = parseInt(bits[0], 10);
-  const m = bits[1];
-  if(Number.isNaN(h) || Number.isNaN(parseInt(m, 10))) return raw;
+  let h = parseInt(parts[0],10);
+  const m = parts[1];
+  if(Number.isNaN(h) || Number.isNaN(parseInt(m,10))) return raw;
 
-  const ampm = h >= 12 ? 'PM' : 'AM';
+  const suffix = h >= 12 ? 'PM' : 'AM';
   h = h % 12;
   if(h === 0) h = 12;
-  return `${h}:${m} ${ampm}`;
+  return `${h}:${m} ${suffix}`;
 }
-function withUnit(value, unit){
-  return value ? `${value} ${unit}` : value;
+function line(val){
+  return val ? val : "";
 }
 function buildMessage(){
   const complaintsRaw = v('complaints');
@@ -1152,17 +1451,11 @@ function buildMessage(){
   const msg = `*NEW CASE ALERT*
 
 *ER SL.No*- ${line(v('erSl'))}
-
 *First Respondant (FR)*- ${line(v('fr'))}
-
 *Receiving TIME*- ${formatTime12h(v('recvTime'))}
-
 *BED No*- ${line(v('bedNo'))}
-
 *PATIENT NAME*- ${line(v('pname'))}
-
 *AGE & GENDER*- ${line(v('ageGender'))}
-
 *OCCUPATION*- ${line(v('occ'))}
 
 *PRESENTING COMPLAINTS*
@@ -1176,12 +1469,12 @@ ${line(v('history'))}
 
 
 *VITALS*:
-*BP*- ${withUnit(line(v('bp')), 'mmHg')}
-*PR*- ${withUnit(line(v('pr')), 'bpm')}
-*SpO2*- ${withUnit(line(v('spo2')), '%')}
-*RR*- ${withUnit(line(v('rr')), '/min')}
-*TEMP*- ${withUnit(line(v('temp')), '°F')}
-*GRBS*- ${withUnit(line(v('grbs')), 'mg/dl')}
+*BP*- ${line(v('bp'))}
+*PR*- ${line(v('pr'))}
+*SpO2*- ${line(v('spo2'))}
+*RR*- ${line(v('rr'))}
+*TEMP*- ${line(v('temp'))}
+*GRBS*- ${line(v('grbs'))}
 *GCS*- ${line(v('gcs'))}
 
 
@@ -1219,7 +1512,7 @@ ${line(v('diagnosis'))}
 *MRD Numbers*:
 *OP*- ${line(v('mrdOp'))}
 *IP*- ${line(v('mrdIp'))}
-*DATE*- ${formatDateDMY(v('caseDate'))}`;
+*DATE*- ${line(v('caseDate'))}`;
   return msg;
 }
 
@@ -1236,15 +1529,10 @@ function buildPreNcaMessage(){
   return `🚨*Pre-NCA*
 
 *SL.NO*- ${line(v('preNcaSl'))}
-
 *RECEIVING TIME* - ${formatTime12h(v('preNcaTime'))}
-
 *BED NO.*- ${line(v('preNcaBed'))}
-
 *PT NAME* - ${line(v('preNcaName'))}
-
 *AGE & GENDER* - ${line(v('preNcaAgeGender'))}
-
 *PRESENTING COMPLAINTS*-
 ${complaints || ""}
 
@@ -1262,9 +1550,8 @@ function render(){
   renderPreNca();
 }
 
-document.querySelectorAll('input, textarea, select').forEach(el=>{
+document.querySelectorAll('input, textarea').forEach(el=>{
   el.addEventListener('input', render);
-  el.addEventListener('change', render);
 });
 
 async function copyMessage(btn){
@@ -1335,6 +1622,7 @@ async function copyText(text, btn){
 }
 
 document.getElementById('copyBtn').addEventListener('click', function(){ copyMessage(this); });
+document.getElementById('copyBtnMobile').addEventListener('click', function(){ copyMessage(this); });
 
 
 const noKnownSystemicHx = document.getElementById('noKnownSystemicHx');
@@ -1362,7 +1650,29 @@ document.getElementById('resetBtn').addEventListener('click', function(){
 
 
 render();
+
+  const mobileCopyBtn = document.getElementById('mobileCopyBtn');
+  const mobileTopBtn = document.getElementById('mobileTopBtn');
+
+  if(mobileCopyBtn){
+    mobileCopyBtn.addEventListener('click', function(){
+      copyMessage(this);
+    });
+  }
+
+  if(mobileTopBtn){
+    mobileTopBtn.addEventListener('click', function(){
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  }
+
 </script>
+
+
+  <div class="mobile-actions" id="mobileActions">
+    <button type="button" class="mobile-copy-btn" id="mobileCopyBtn">Copy Message</button>
+    <button type="button" class="mobile-top-btn" id="mobileTopBtn" aria-label="Back to top">↑</button>
+  </div>
 
 </body>
 </html>
