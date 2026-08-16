@@ -1184,6 +1184,127 @@
     }
   }
 
+
+
+/* =========================================================
+   FINAL MOBILE GRID / BOX OVERFLOW FIX
+   Prevents native time inputs and second-column fields from
+   overflowing the viewport/card on iPhone Safari.
+   ========================================================= */
+
+.grid,
+.vitals-grid,
+.mrd-grid {
+  min-width: 0;
+  width: 100%;
+}
+
+.grid {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.grid > .field,
+.vitals-grid > .field,
+.mrd-grid > .field {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}
+
+.grid > .field > input,
+.grid > .field > textarea,
+.grid > .field > select,
+.vitals-grid input,
+.vitals-grid textarea,
+.vitals-grid select,
+.mrd-grid input,
+.mrd-grid textarea,
+.mrd-grid select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Native iOS time controls can have a larger intrinsic width.
+   Explicitly constrain them to their grid track. */
+input[type="time"] {
+  width: 100%;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+/* Keep the Pre-NCA two-column grid inside the drawer/card. */
+.settings-content,
+.settings-card,
+.settings-card .pre-nca-panel,
+.settings-card .pre-nca-grid {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.settings-content {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.settings-card {
+  width: 100%;
+}
+
+.settings-card .pre-nca-grid {
+  width: 100%;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+}
+
+.settings-card .pre-nca-grid > .field {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+.settings-card .pre-nca-grid input,
+.settings-card .pre-nca-grid textarea,
+.settings-card .pre-nca-grid select {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Extra protection for narrow mobile viewports. */
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+
+  .grid > .field,
+  .settings-card .pre-nca-grid > .field {
+    min-width: 0 !important;
+  }
+
+  input[type="time"] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding-left: 10px;
+    padding-right: 8px;
+  }
+
+  .settings-card .pre-nca-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    overflow: hidden;
+  }
+}
+
+/* On very narrow phones, stack the form to guarantee zero overflow. */
+@media (max-width: 360px) {
+  .grid,
+  .settings-card .pre-nca-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
 </style>
 </head>
 <body>
