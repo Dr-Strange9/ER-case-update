@@ -71,9 +71,6 @@
   .settings-card-head{background:linear-gradient(90deg,rgba(255,107,97,.09),transparent)}
   .pre-nca-preview-wrap{background:var(--panel)}
   .toggle-row{background:#16312d}
-  .float-copy{
-    background:rgba(13,23,22,.96);
-  }
   .theme-settings-card{
     margin-bottom:12px;
     padding:14px 16px;
@@ -432,9 +429,6 @@
     text-align:center;
   }
 
-  .float-copy{
-    display:none;
-  }
 
   footer{
     max-width:1080px;
@@ -548,25 +542,6 @@
       line-height:1.65;
     }
 
-    .float-copy{
-      display:block;
-      position:fixed;
-      left:0;right:0;bottom:0;
-      z-index:100;
-      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
-      background:rgba(255,255,255,.96);
-      border-top:1px solid var(--line);
-      box-shadow:0 -5px 20px rgba(8,63,58,.10);
-      backdrop-filter:blur(10px);
-    }
-    .float-copy .btn-copy{
-      display:block;
-      width:100%;
-      min-height:48px;
-      padding:12px 14px;
-      border-radius:10px;
-      font-size:14px;
-    }
 
     footer{
       padding:0 14px;
@@ -1150,22 +1125,19 @@
     color:#7ce7d7 !important;
   }
   .settings-card .pre-nca-copy,
-  #copyBtn,
-  #copyBtnMobile{
+  #copyBtn{
     background:#263b37 !important;
     color:#eaf5f2 !important;
     border:1px solid #49635e !important;
     box-shadow:0 0 0 2px rgba(110,224,208,.07) !important;
   }
   .settings-card .pre-nca-copy:hover,
-  #copyBtn:hover,
-  #copyBtnMobile:hover{
+  #copyBtn:hover{
     background:#304a45 !important;
     border-color:#6eaaa0 !important;
   }
   .settings-card .pre-nca-copy.copied,
-  #copyBtn.copied,
-  #copyBtnMobile.copied{
+  #copyBtn.copied{
     background:#17443e !important;
     border-color:#4e9d91 !important;
     color:#dffff8 !important;
@@ -1181,6 +1153,54 @@
       padding:8px 12px 16px !important;
       font-size:12px !important;
       line-height:1.7 !important;
+    }
+  }
+
+
+  /* First Respondent fields: two-line writing without breaking the grid */
+  .respondent-box,
+  .pre-nca-respondent-box{
+    display:block;
+    width:100%;
+    min-width:0;
+    max-width:100%;
+    min-height:76px !important;
+    height:76px !important;
+    resize:vertical !important;
+    line-height:1.5 !important;
+    padding:12px 13px !important;
+    white-space:pre-wrap !important;
+    overflow-wrap:anywhere;
+  }
+
+  /* Prevent iPhone Safari time controls from overflowing into the next grid column */
+  .grid > .field{
+    min-width:0;
+  }
+  .grid > .field > input,
+  .grid > .field > textarea,
+  .grid > .field > select{
+    min-width:0;
+    max-width:100%;
+  }
+  input[type="time"]{
+    width:100%;
+    min-width:0 !important;
+    max-width:100%;
+  }
+
+  @media (max-width:600px){
+    .respondent-box,
+    .pre-nca-respondent-box{
+      min-height:86px !important;
+      height:86px !important;
+      font-size:16px !important;
+      line-height:1.5 !important;
+      padding:12px 13px !important;
+    }
+
+    .grid{
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
     }
   }
 
@@ -1255,7 +1275,7 @@
       </div>
       <div class="field wide">
         <label for="preNcaFr">First Respondant (FR &amp; Co-FR)</label>
-        <input id="preNcaFr" placeholder="FR &amp; Co-FR names">
+        <textarea id="preNcaFr" placeholder="FR &amp; Co-FR names" class="pre-nca-respondent-box"></textarea>
       </div>
     </div>
 
@@ -1271,16 +1291,16 @@
   <div class="panel" id="formStart">
     <div class="section-title">Case identification</div>
     <div class="grid">
-      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" inputmode="numeric" placeholder="e.g. 214"></div>
-      <div class="field"><label for="fr">First Respondent (FR)</label><input id="fr" inputmode="text" placeholder="Name"></div>
+      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" placeholder="e.g. 214"></div>
+      <div class="field"><label for="fr">First Respondent (FR)</label><textarea id="fr" inputmode="text" placeholder="Name" class="respondent-box"></textarea></div>
       <div class="field"><label for="recvTime">Receiving time</label><input id="recvTime" type="time"></div>
-      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" inputmode="text" placeholder="e.g. ER-4"></div>
+      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" placeholder="e.g. ER-4"></div>
     </div>
 
     <div class="section-title">Patient details</div>
     <div class="grid">
-      <div class="field wide"><label for="pname">Patient name</label><input id="pname" autocomplete="name" autocomplete="name" placeholder="Full name"></div>
-      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" inputmode="text" inputmode="text" placeholder="e.g. 45 / M"></div>
+      <div class="field wide"><label for="pname">Patient name</label><input id="pname" autocomplete="name" placeholder="Full name"></div>
+      <div class="field"><label for="ageGender">Age &amp; gender</label><input id="ageGender" inputmode="text" placeholder="e.g. 45 / M"></div>
       <div class="field"><label for="occ">Occupation</label><input id="occ" placeholder="e.g. Farmer"></div>
     </div>
 
@@ -1353,10 +1373,6 @@
     <div id="output"></div>
   </div>
 </main>
-
-<div class="float-copy">
-  <button class="btn btn-copy" id="copyBtnMobile">Copy message</button>
-</div>
 
 <script>
 function v(id){
@@ -1579,8 +1595,6 @@ async function copyText(text, btn){
 }
 
 document.getElementById('copyBtn').addEventListener('click', function(){ copyMessage(this); });
-document.getElementById('copyBtnMobile').addEventListener('click', function(){ copyMessage(this); });
-
 
 const noKnownSystemicHx = document.getElementById('noKnownSystemicHx');
 const pastHxField = document.getElementById('pastHx');
