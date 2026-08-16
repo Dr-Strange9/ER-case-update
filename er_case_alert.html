@@ -834,6 +834,82 @@
     }
   }
 
+
+  /* Pre-NCA: remove the white card appearance and match the dark UI */
+  .settings-card{
+    background:#13211f !important;
+    border:1px solid #49635e !important;
+  }
+  .settings-card-head.pre-nca-settings-head{
+    background:#182b28 !important;
+    border-bottom:1px solid #49635e !important;
+    padding:14px 16px !important;
+  }
+  .settings-card-title{
+    color:#fff !important;
+    font-size:15px !important;
+    font-weight:900 !important;
+  }
+  .settings-card-sub{
+    color:#b8c9c5 !important;
+    font-size:11px !important;
+  }
+  .settings-card .pre-nca-panel{
+    margin:0 !important;
+    max-width:none !important;
+    border:0 !important;
+    border-radius:0 !important;
+    background:#13211f !important;
+    box-shadow:none !important;
+  }
+  .settings-card .pre-nca-head{
+    background:#10211e !important;
+    border-bottom:1px solid #35504b !important;
+  }
+  .settings-card .pre-nca-grid{
+    background:#13211f !important;
+  }
+  .settings-card .pre-nca-preview-wrap{
+    background:#0b1614 !important;
+    border-top:1px solid #35504b !important;
+  }
+  .settings-card .pre-nca-preview-title{
+    color:#6ee0d0 !important;
+  }
+  .settings-card .pre-nca-output{
+    background:#0b1614 !important;
+    color:#fff !important;
+  }
+  .settings-card .pre-nca-output strong{
+    color:#7ce7d7 !important;
+  }
+  .settings-card .pre-nca-copy{
+    background:#263b37 !important;
+    color:#eaf5f2 !important;
+    border:1px solid #49635e !important;
+    box-shadow:0 0 0 2px rgba(110,224,208,.07) !important;
+  }
+  .settings-card .pre-nca-copy:hover{
+    background:#304a45 !important;
+    border-color:#6eaaa0 !important;
+  }
+  .settings-card .pre-nca-copy.copied{
+    background:#17443e !important;
+    border-color:#4e9d91 !important;
+    color:#dffff8 !important;
+  }
+  @media (max-width:600px){
+    .settings-content{padding:8px !important}
+    .settings-card{border-radius:12px !important}
+    .settings-card-head.pre-nca-settings-head{padding:13px 12px !important}
+    .settings-card .pre-nca-grid{padding:13px 12px 16px !important}
+    .settings-card .pre-nca-output{
+      padding:8px 12px 16px !important;
+      font-size:12px !important;
+      line-height:1.7 !important;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -875,7 +951,7 @@
         <div class="pre-nca-badge">🚨 PRE-NCA</div>
         <div class="pre-nca-sub">Quick pre-NCA notification</div>
       </div>
-      <button class="btn btn-copy pre-nca-copy" id="copyPreNcaBtn" type="button">Copy Pre-NCA</button>
+      
     </div>
 
     <div class="grid pre-nca-grid">
@@ -1030,10 +1106,25 @@ function formatDateDMY(value){
 }
 function formatTime12h(value){
   if(!value) return "";
-  const bits = value.split(':');
-  if(bits.length < 2) return value;
+  const raw = String(value).trim();
+
+  // Accept both native 24-hour values (HH:MM) and 12-hour values with AM/PM.
+  const ampmMatch = raw.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if(ampmMatch){
+    const h = parseInt(ampmMatch[1], 10);
+    const m = ampmMatch[2];
+    const ap = ampmMatch[3].toUpperCase();
+    if(h >= 1 && h <= 12) return `${h}:${m} ${ap}`;
+    return raw;
+  }
+
+  const bits = raw.split(':');
+  if(bits.length < 2) return raw;
+
   let h = parseInt(bits[0], 10);
   const m = bits[1];
+  if(Number.isNaN(h) || Number.isNaN(parseInt(m, 10))) return raw;
+
   const ampm = h >= 12 ? 'PM' : 'AM';
   h = h % 12;
   if(h === 0) h = 12;
