@@ -998,7 +998,7 @@
     <div class="section-title">Case identification</div>
     <div class="grid">
       <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" placeholder="e.g. 214"></div>
-      <div class="field"><label for="fr">First Respondent (FR)</label><input id="fr" placeholder="Name"></div>
+      <div class="field"><label for="fr">First Respondent (FR)</label><textarea id="fr" class="lg-box" placeholder="e.g.&#10;Dr. Vihari (DSO)&#10;Dr. Reethika (JR1)"></textarea></div>
       <div class="field"><label for="recvTime">Receiving time</label><input id="recvTime" type="time"></div>
       <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" placeholder="e.g. ER-4"></div>
     </div>
@@ -1059,7 +1059,23 @@
           <option value="Black zone and priority 4">Black zone and priority 4</option>
         </select>
       </div>
-      <div class="field"><label for="consultDept">Consultation call — department / doctor (DMO/DSO/JR)</label><textarea id="consultDept" class="lg-box" placeholder="e.g. Surgery — Dr. X (JR)"></textarea></div>
+      <div class="field">
+        <label for="consultDept">Consultation call — department</label>
+        <select id="consultDept">
+          <option value="">Select department</option>
+          <option value="Department of General Medicine">Department of General Medicine</option>
+          <option value="Department of Paediatrics">Department of Paediatrics</option>
+          <option value="Department of Respiratory Medicine">Department of Respiratory Medicine</option>
+          <option value="Department of General Surgery">Department of General Surgery</option>
+          <option value="Department of Orthopaedics">Department of Orthopaedics</option>
+          <option value="Department of Otorhinolaryngology (ENT)">Department of Otorhinolaryngology (ENT)</option>
+          <option value="Department of Ophthalmology">Department of Ophthalmology</option>
+          <option value="Department of Obstetrics &amp; Gynaecology">Department of Obstetrics &amp; Gynaecology</option>
+          <option value="__other__">Other (type below)</option>
+        </select>
+        <input id="consultDeptOther" placeholder="Type department name" style="margin-top:6px;display:none">
+      </div>
+      <div class="field"><label for="consultDoctors">Doctor name(s) — DMO/DSO/JR</label><textarea id="consultDoctors" class="lg-box" placeholder="e.g.&#10;Dr. Vihari (DSO)&#10;Dr.Reethika (JR1)"></textarea></div>
       <div class="field"><label for="consultTime">Consultation call — time</label><input id="consultTime" type="time"></div>
     </div>
 
@@ -1133,6 +1149,14 @@ function formatTime12h(value){
 function withUnit(value, unit){
   return value ? `${value} ${unit}` : value;
 }
+function getConsultDept(){
+  const sel = document.getElementById('consultDept');
+  if(!sel) return '';
+  if(sel.value === '__other__'){
+    return document.getElementById('consultDeptOther').value.trim();
+  }
+  return sel.value;
+}
 function buildMessage(){
   const complaintsRaw = v('complaints');
   let complaintsBlock = "1).";
@@ -1147,7 +1171,16 @@ function buildMessage(){
     complaintsBold = items.map((c,i)=>`*${i+1}).*\n${c}`).join('\n');
   }
 
-  const consultLine = `${line(v('consultDept'))}${v('consultTime') ? ' at ' + formatTime12h(v('consultTime')) : ''}`;
+  const consultDeptVal = getConsultDept();
+  let consultLine = '';
+  if(consultDeptVal){
+    consultLine += consultDeptVal;
+    if(v('consultTime')) consultLine += ' @' + formatTime12h(v('consultTime'));
+  }
+  const consultDoctorsVal = v('consultDoctors');
+  if(consultDoctorsVal){
+    consultLine += (consultLine ? '\n' : '') + consultDoctorsVal;
+  }
 
   const msg = `*NEW CASE ALERT*
 
@@ -1267,6 +1300,15 @@ document.querySelectorAll('input, textarea, select').forEach(el=>{
   el.addEventListener('change', render);
 });
 
+const consultDeptSelect = document.getElementById('consultDept');
+const consultDeptOther = document.getElementById('consultDeptOther');
+if(consultDeptSelect && consultDeptOther){
+  consultDeptSelect.addEventListener('change', function(){
+    consultDeptOther.style.display = this.value === '__other__' ? '' : 'none';
+    if(this.value !== '__other__') consultDeptOther.value = '';
+  });
+}
+
 async function copyMessage(btn){
   const text = buildMessage();
   try{
@@ -1357,6 +1399,7 @@ document.getElementById('resetBtn').addEventListener('click', function(){
     if(el.type === 'checkbox') el.checked = false;
     else el.value = '';
   });
+  if(consultDeptOther) consultDeptOther.style.display = 'none';
   render();
 });
 
