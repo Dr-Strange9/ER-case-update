@@ -568,6 +568,45 @@
     border-radius:10px;
     background:var(--teal-soft);
   }
+  .comorbidity-details{
+    display:none;
+    grid-template-columns:1fr 1fr;
+    gap:10px 12px;
+    margin-top:8px;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:rgba(22,49,45,.55);
+  }
+  .respondent-grid,
+  .doctor-grid{
+    display:grid;
+    gap:8px;
+  }
+  .respondent-row,
+  .doctor-row{
+    display:grid;
+    grid-template-columns:150px minmax(0,1fr);
+    gap:8px;
+    align-items:center;
+  }
+  .respondent-row select,
+  .doctor-row select{
+    width:100%;
+  }
+  @media (max-width:600px){
+    .respondent-row,
+    .doctor-row{
+      grid-template-columns:1fr;
+    }
+  }
+  .comorbidity-details.is-visible{display:grid}
+  .comorbidity-details .field{min-width:0}
+  .medication-name-field{display:none}
+  .medication-name-field.is-visible{display:block}
+  @media (max-width:600px){
+    .comorbidity-details{grid-template-columns:1fr}
+  }
   .toggle-label{
     display:block;
     color:var(--ink);
@@ -980,8 +1019,23 @@
         <textarea id="preNcaComplaints" placeholder="Enter presenting complaint(s)"></textarea>
       </div>
       <div class="field wide">
-        <label for="preNcaFr">First Respondant (FR &amp; Co-FR)</label>
-        <textarea id="preNcaFr" class="lg-box" placeholder="FR &amp; Co-FR names"></textarea>
+        <label>First Respondent (FR / Co-FR)</label>
+        <div class="respondent-grid">
+          <div class="respondent-row">
+            <select id="preNcaFrRole">
+              <option value="FR">FR</option>
+              <option value="Co-FR">Co-FR</option>
+            </select>
+            <input id="preNcaFrName" placeholder="Enter respondent name">
+          </div>
+          <div class="respondent-row">
+            <select id="preNcaCoFrRole">
+              <option value="">No Co-FR</option>
+              <option value="Co-FR">Co-FR</option>
+            </select>
+            <input id="preNcaCoFrName" placeholder="Enter Co-FR name (optional)">
+          </div>
+        </div>
       </div>
     </div>
 
@@ -997,10 +1051,28 @@
   <div class="panel" id="formStart">
     <div class="section-title">Case identification</div>
     <div class="grid">
-      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" placeholder="e.g. 214"></div>
-      <div class="field"><label for="fr">First Respondent (FR)</label><textarea id="fr" class="lg-box" placeholder="e.g.&#10;Dr. Vihari (DSO)&#10;Dr. Reethika (JR1)"></textarea></div>
+      <div class="field"><label for="erSl">ER SL. No.</label><input id="erSl" inputmode="numeric" placeholder="e.g. 6"></div>
+      <div class="field wide">
+        <label>First Respondent (FR / Co-FR)</label>
+        <div class="respondent-grid">
+          <div class="respondent-row">
+            <select id="frRole">
+              <option value="FR">FR</option>
+              <option value="Co-FR">Co-FR</option>
+            </select>
+            <input id="frName" placeholder="Enter respondent name">
+          </div>
+          <div class="respondent-row">
+            <select id="coFrRole">
+              <option value="">No Co-FR</option>
+              <option value="Co-FR">Co-FR</option>
+            </select>
+            <input id="coFrName" placeholder="Enter Co-FR name (optional)">
+          </div>
+        </div>
+      </div>
       <div class="field"><label for="recvTime">Receiving time</label><input id="recvTime" type="time"></div>
-      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" placeholder="e.g. ER-4"></div>
+      <div class="field"><label for="bedNo">Bed No.</label><input id="bedNo" inputmode="text" placeholder="e.g. 5"></div>
     </div>
 
     <div class="section-title">Patient details</div>
@@ -1032,8 +1104,8 @@
       <div class="field">
         <div class="toggle-row">
           <div>
-            <label class="toggle-label" for="noKnownSystemicHx">No known history of DM, HTN, Asthma, Epilepsy, Thyroid or TB</label>
-            <div class="toggle-help">Automatically fills the past-history field. You can still edit it manually.</div>
+            <label class="toggle-label" for="noKnownSystemicHx">No known history of DM, HTN, Asthma, Epilepsy, Thyroid disease or TB</label>
+            <div class="toggle-help">Turn this ON to mark all listed comorbidities as not known.</div>
           </div>
           <label class="switch">
             <input type="checkbox" id="noKnownSystemicHx">
@@ -1042,8 +1114,193 @@
         </div>
       </div>
       <div class="field">
-        <label for="pastHx">Systemic diseases / regular medication / known allergies</label>
-        <textarea id="pastHx" placeholder="e.g. K/c/o DM2, HTN on regular meds. No known drug allergies."></textarea>
+        <div class="toggle-row">
+          <div>
+            <label class="toggle-label" for="hxDm">Diabetes Mellitus</label>
+            <div class="toggle-help">Turn on if the patient is a known case.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" class="comorbidity-toggle" id="hxDm" data-name="DM">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="comorbidity-details" id="hxDmDetails">
+          <div class="field">
+            <label for="hxDmSince">Since</label>
+            <input id="hxDmSince" placeholder="e.g. 5 years / 2020">
+          </div>
+          <div class="field">
+            <label for="hxDmMeds">On regular medication?</label>
+            <select id="hxDmMeds">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="field medication-name-field" id="hxDmMedicationField">
+            <label for="hxDmMedication">Medication</label>
+            <input id="hxDmMedication" placeholder="Enter medication name">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="toggle-row">
+          <div>
+            <label class="toggle-label" for="hxHtn">Hypertension (HTN)</label>
+            <div class="toggle-help">Turn on if the patient is a known case.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" class="comorbidity-toggle" id="hxHtn" data-name="HTN">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="comorbidity-details" id="hxHtnDetails">
+          <div class="field">
+            <label for="hxHtnSince">Since</label>
+            <input id="hxHtnSince" placeholder="e.g. 5 years / 2020">
+          </div>
+          <div class="field">
+            <label for="hxHtnMeds">On regular medication?</label>
+            <select id="hxHtnMeds">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="field medication-name-field" id="hxHtnMedicationField">
+            <label for="hxHtnMedication">Medication</label>
+            <input id="hxHtnMedication" placeholder="Enter medication name">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="toggle-row">
+          <div>
+            <label class="toggle-label" for="hxAsthma">Asthma</label>
+            <div class="toggle-help">Turn on if the patient is a known case.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" class="comorbidity-toggle" id="hxAsthma" data-name="Asthma">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="comorbidity-details" id="hxAsthmaDetails">
+          <div class="field">
+            <label for="hxAsthmaSince">Since</label>
+            <input id="hxAsthmaSince" placeholder="e.g. 5 years / 2020">
+          </div>
+          <div class="field">
+            <label for="hxAsthmaMeds">On regular medication?</label>
+            <select id="hxAsthmaMeds">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="field medication-name-field" id="hxAsthmaMedicationField">
+            <label for="hxAsthmaMedication">Medication</label>
+            <input id="hxAsthmaMedication" placeholder="Enter medication name">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="toggle-row">
+          <div>
+            <label class="toggle-label" for="hxEpilepsy">Epilepsy</label>
+            <div class="toggle-help">Turn on if the patient is a known case.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" class="comorbidity-toggle" id="hxEpilepsy" data-name="Epilepsy">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="comorbidity-details" id="hxEpilepsyDetails">
+          <div class="field">
+            <label for="hxEpilepsySince">Since</label>
+            <input id="hxEpilepsySince" placeholder="e.g. 5 years / 2020">
+          </div>
+          <div class="field">
+            <label for="hxEpilepsyMeds">On regular medication?</label>
+            <select id="hxEpilepsyMeds">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="field medication-name-field" id="hxEpilepsyMedicationField">
+            <label for="hxEpilepsyMedication">Medication</label>
+            <input id="hxEpilepsyMedication" placeholder="Enter medication name">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="toggle-row">
+          <div>
+            <label class="toggle-label" for="hxThyroid">Thyroid disease</label>
+            <div class="toggle-help">Turn on if the patient is a known case.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" class="comorbidity-toggle" id="hxThyroid" data-name="Thyroid disease">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="comorbidity-details" id="hxThyroidDetails">
+          <div class="field">
+            <label for="hxThyroidSince">Since</label>
+            <input id="hxThyroidSince" placeholder="e.g. 5 years / 2020">
+          </div>
+          <div class="field">
+            <label for="hxThyroidMeds">On regular medication?</label>
+            <select id="hxThyroidMeds">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="field medication-name-field" id="hxThyroidMedicationField">
+            <label for="hxThyroidMedication">Medication</label>
+            <input id="hxThyroidMedication" placeholder="Enter medication name">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="toggle-row">
+          <div>
+            <label class="toggle-label" for="hxTb">Tuberculosis (TB)</label>
+            <div class="toggle-help">Turn on if the patient is a known case.</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" class="comorbidity-toggle" id="hxTb" data-name="TB">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="comorbidity-details" id="hxTbDetails">
+          <div class="field">
+            <label for="hxTbSince">Since</label>
+            <input id="hxTbSince" placeholder="e.g. 5 years / 2020">
+          </div>
+          <div class="field">
+            <label for="hxTbMeds">On regular medication?</label>
+            <select id="hxTbMeds">
+              <option value="">Select</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="field medication-name-field" id="hxTbMedicationField">
+            <label for="hxTbMedication">Medication</label>
+            <input id="hxTbMedication" placeholder="Enter medication name">
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="pastHx">Other past history / known allergies to medicines</label>
+        <textarea id="pastHx" placeholder="e.g. No known drug allergies."></textarea>
       </div>
     </div>
 
@@ -1075,7 +1332,51 @@
         </select>
         <input id="consultDeptOther" placeholder="Type department name" style="margin-top:6px;display:none">
       </div>
-      <div class="field"><label for="consultDoctors">Doctor name(s) — DMO/DSO/JR</label><textarea id="consultDoctors" class="lg-box" placeholder="e.g.&#10;Dr. Vihari (DSO)&#10;Dr.Reethika (JR1)"></textarea></div>
+      <div class="field wide">
+        <label>Doctor name(s) — designation</label>
+        <div class="doctor-grid">
+          <div class="doctor-row">
+            <select id="doctor1Role">
+              <option value="">Select designation</option>
+              <option value="DMO">DMO</option>
+              <option value="DSO">DSO</option>
+              <option value="JR2">JR2</option>
+              <option value="JR1">JR1</option>
+            </select>
+            <input id="doctor1Name" placeholder="Doctor name">
+          </div>
+          <div class="doctor-row">
+            <select id="doctor2Role">
+              <option value="">Select designation</option>
+              <option value="DMO">DMO</option>
+              <option value="DSO">DSO</option>
+              <option value="JR2">JR2</option>
+              <option value="JR1">JR1</option>
+            </select>
+            <input id="doctor2Name" placeholder="Doctor name (optional)">
+          </div>
+          <div class="doctor-row">
+            <select id="doctor3Role">
+              <option value="">Select designation</option>
+              <option value="DMO">DMO</option>
+              <option value="DSO">DSO</option>
+              <option value="JR2">JR2</option>
+              <option value="JR1">JR1</option>
+            </select>
+            <input id="doctor3Name" placeholder="Doctor name (optional)">
+          </div>
+          <div class="doctor-row">
+            <select id="doctor4Role">
+              <option value="">Select designation</option>
+              <option value="DMO">DMO</option>
+              <option value="DSO">DSO</option>
+              <option value="JR2">JR2</option>
+              <option value="JR1">JR1</option>
+            </select>
+            <input id="doctor4Name" placeholder="Doctor name (optional)">
+          </div>
+        </div>
+      </div>
       <div class="field"><label for="consultTime">Consultation call — time</label><input id="consultTime" type="time"></div>
     </div>
 
@@ -1177,16 +1478,87 @@ function buildMessage(){
     consultLine += consultDeptVal;
     if(v('consultTime')) consultLine += ' @' + formatTime12h(v('consultTime'));
   }
-  const consultDoctorsVal = v('consultDoctors');
+  const frName = v('frName');
+  const frRole = v('frRole');
+  const coFrName = v('coFrName');
+  const coFrRole = v('coFrRole');
+
+  const frParts = [];
+  if(frName) frParts.push(`${frName} (${frRole || 'FR'})`);
+  if(coFrName && coFrRole) frParts.push(`${coFrName} (${coFrRole})`);
+  const frOutput = frParts.join('\n');
+
+  const doctorParts = [];
+  for(let i = 1; i <= 4; i++){
+    const role = v(`doctor${i}Role`);
+    const name = v(`doctor${i}Name`);
+    if(name && role){
+      doctorParts.push(`Dr . ${name} (${role})`);
+    }else if(name){
+      doctorParts.push(`Dr . ${name}`);
+    }
+  }
+  const consultDoctorsVal = doctorParts.join('\n');
   if(consultDoctorsVal){
     consultLine += (consultLine ? '\n' : '') + consultDoctorsVal;
+  }
+
+  const comorbidityIds = [
+    ['hxDm','hxDmSince','hxDmMeds','hxDmMedication','DM'],
+    ['hxHtn','hxHtnSince','hxHtnMeds','hxHtnMedication','HTN'],
+    ['hxAsthma','hxAsthmaSince','hxAsthmaMeds','hxAsthmaMedication','Asthma'],
+    ['hxEpilepsy','hxEpilepsySince','hxEpilepsyMeds','hxEpilepsyMedication','Epilepsy'],
+    ['hxThyroid','hxThyroidSince','hxThyroidMeds','hxThyroidMedication','Thyroid disease'],
+    ['hxTb','hxTbSince','hxTbMeds','hxTbMedication','TB']
+  ];
+
+  const knownComorbidities = [];
+  const notKnownComorbidities = [];
+
+  comorbidityIds.forEach(([toggleId, sinceId, medsId, medicationId, name]) => {
+    const toggle = document.getElementById(toggleId);
+
+    if(toggle?.checked){
+      const since = v(sinceId);
+      const meds = v(medsId);
+      const medication = v(medicationId);
+
+      let detail = `K/c/o ${name}`;
+      if(since) detail += ` since ${since}`;
+
+      if(meds === 'Yes'){
+        detail += ', on regular medication';
+        if(medication) detail += ` (${medication})`;
+      }else if(meds === 'No'){
+        detail += ', not on regular medication';
+      }
+
+      knownComorbidities.push(detail + '.');
+    }else{
+      notKnownComorbidities.push(`Not a known case of ${name}.`);
+    }
+  });
+
+  const otherPastHx = v('pastHx');
+
+  let pastHistoryText = knownComorbidities.join(' ');
+
+  if(notKnownComorbidities.length){
+    const notKnownNames = notKnownComorbidities
+      .map(text => text.replace(/^Not a known case of /, '').replace(/\.$/, ''));
+    pastHistoryText += (pastHistoryText ? '\n' : '') +
+      `Not a known case of ${notKnownNames.join(', ')}.`;
+  }
+
+  if(otherPastHx){
+    pastHistoryText += `${pastHistoryText ? ' ' : ''}${otherPastHx}`;
   }
 
   const msg = `*NEW CASE ALERT*
 
 *ER SL.No*- ${line(v('erSl'))}
 
-*First Respondant (FR)*- ${line(v('fr'))}
+*First Respondant (FR)*- ${line(frOutput)}
 
 *Receiving TIME*- ${formatTime12h(v('recvTime'))}
 
@@ -1220,7 +1592,7 @@ ${line(v('history'))}
 
 
 *PAST HISTORY ( Any Systemic Diseases and Regular Medication Details / Any Known Allergies to Medicines)*:
-${line(v('pastHx'))}
+${line(pastHistoryText)}
 
 
 
@@ -1266,6 +1638,19 @@ function renderPreviewHtml(text){
 
 function buildPreNcaMessage(){
   const complaints = v('preNcaComplaints');
+
+  const preNcaFrName = v('preNcaFrName');
+  const preNcaFrRole = v('preNcaFrRole');
+  const preNcaCoFrName = v('preNcaCoFrName');
+  const preNcaCoFrRole = v('preNcaCoFrRole');
+
+  const preNcaFrParts = [];
+  if(preNcaFrName) preNcaFrParts.push(`${preNcaFrName} (${preNcaFrRole || 'FR'})`);
+  if(preNcaCoFrName && preNcaCoFrRole){
+    preNcaFrParts.push(`${preNcaCoFrName} (${preNcaCoFrRole})`);
+  }
+  const preNcaFrOutput = preNcaFrParts.join('\n');
+
   return `🚨*Pre-NCA*
 
 *SL.NO*- ${line(v('preNcaSl'))}
@@ -1281,7 +1666,7 @@ function buildPreNcaMessage(){
 *PRESENTING COMPLAINTS*-
 ${complaints || ""}
 
-*FIRST RESPONDANT (FR & Co-FR)*- ${line(v('preNcaFr'))}`;
+*FIRST RESPONDANT (FR & Co-FR)*- ${line(preNcaFrOutput)}`;
 }
 
 function renderPreNca(){
@@ -1380,17 +1765,64 @@ document.getElementById('copyBtn').addEventListener('click', function(){ copyMes
 
 
 const noKnownSystemicHx = document.getElementById('noKnownSystemicHx');
-const pastHxField = document.getElementById('pastHx');
-const defaultPastHx = 'Not a known case of DM, HTN, Asthma, Epilepsy, Thyroid disease or TB.';
 
-noKnownSystemicHx.addEventListener('change', function(){
-  if(this.checked){
-    pastHxField.value = defaultPastHx;
-    pastHxField.dispatchEvent(new Event('input', {bubbles:true}));
-  }else if(pastHxField.value === defaultPastHx){
-    pastHxField.value = '';
-    pastHxField.dispatchEvent(new Event('input', {bubbles:true}));
+if(noKnownSystemicHx){
+  noKnownSystemicHx.addEventListener('change', function(){
+    if(this.checked){
+      document.querySelectorAll('.comorbidity-toggle').forEach(toggle => {
+        toggle.checked = false;
+        const details = document.getElementById(toggle.id + 'Details');
+        if(details){
+          details.classList.remove('is-visible');
+          details.querySelectorAll('input, select').forEach(el => el.value = '');
+          const medicationField = document.getElementById(toggle.id + 'MedicationField');
+          if(medicationField) medicationField.classList.remove('is-visible');
+        }
+      });
+    }
+    render();
+  });
+}
+
+document.querySelectorAll('.comorbidity-toggle').forEach(toggle => {
+  const details = document.getElementById(toggle.id + 'Details');
+  const medicationSelect = document.getElementById(toggle.id + 'Meds');
+  const medicationField = document.getElementById(toggle.id + 'MedicationField');
+  const medicationInput = document.getElementById(toggle.id + 'Medication');
+
+  function syncComorbidityDetails(){
+    if(!details) return;
+
+    details.classList.toggle('is-visible', toggle.checked);
+
+    if(toggle.checked && noKnownSystemicHx){
+      noKnownSystemicHx.checked = false;
+    }
+
+    if(!toggle.checked){
+      details.querySelectorAll('input, select').forEach(el => el.value = '');
+      if(medicationField) medicationField.classList.remove('is-visible');
+    }
+
+    render();
   }
+
+  function syncMedicationField(){
+    const show = toggle.checked && medicationSelect && medicationSelect.value === 'Yes';
+    if(medicationField) medicationField.classList.toggle('is-visible', show);
+
+    if(!show && medicationInput) medicationInput.value = '';
+    render();
+  }
+
+  toggle.addEventListener('change', syncComorbidityDetails);
+
+  if(medicationSelect){
+    medicationSelect.addEventListener('change', syncMedicationField);
+  }
+
+  syncComorbidityDetails();
+  syncMedicationField();
 });
 
 document.getElementById('resetBtn').addEventListener('click', function(){
@@ -1400,6 +1832,8 @@ document.getElementById('resetBtn').addEventListener('click', function(){
     else el.value = '';
   });
   if(consultDeptOther) consultDeptOther.style.display = 'none';
+  document.querySelectorAll('.comorbidity-details').forEach(el => el.classList.remove('is-visible'));
+  document.querySelectorAll('.medication-name-field').forEach(el => el.classList.remove('is-visible'));
   render();
 });
 
